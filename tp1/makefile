@@ -9,7 +9,8 @@ fetch-data: FORCE
 
 extract-data: tp1-tri-donnees.tar.gz
 	tar -zxvvf $^
-	mv tp1-tri-donnees data
+	[ -d data ] && rmdir data
+	mv tp1-H10-donnees data
 
 .PHONY: FORCE
 
