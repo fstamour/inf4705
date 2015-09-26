@@ -63,7 +63,11 @@ void quicksort(RandomAccessIterator first, RandomAccessIterator last, unsigned t
     // Choose the pivot
     value_type pivot = 0;
     if(isRandomPivot) {
-      pivot = rand() % (elementCount - 3) + 1;
+      if(elementCount == 3) {
+        pivot = 1;
+      } else {
+        pivot = rand() % (elementCount - 3) + 1;
+      }
       pivot = *(first + pivot);
     } else {
       RandomAccessIterator mid = first + (last - first)/2; 
