@@ -52,29 +52,26 @@ template<typename RandomAccessIterator>
 void quicksort(RandomAccessIterator first, RandomAccessIterator last, unsigned threshold, bool isRandomPivot) {
   typedef typename std::iterator_traits<RandomAccessIterator>::value_type
     value_type;
-  
+
   size_t elementCount = last - first;
 
   if (elementCount <= threshold){
     // TODO Finish bubblesort call
     bubble_sort(first, last);
 
-  } else if (elementCount >= 3) {
+  } else if (elementCount > threshold) {
     // Choose the pivot
     value_type pivot = 0;
     if(isRandomPivot) {
-      if(elementCount == 3) {
-        pivot = 1;
-      } else {
-        pivot = rand() % (elementCount - 3) + 1;
-      }
-      pivot = *(first + pivot);
-    } else {
+        pivot = rand() % (elementCount - threshold) + 1;
+        pivot = *(first + pivot);
+    }
+    else {
       RandomAccessIterator mid = first + (last - first)/2; 
       pivot = median(*first, *mid, *(last-1));
     }
     //    std::cout << "n: " << elementCount << " pivot: " << pivot << std::endl;
-    
+
     // Could be optimized to do only one pass.
     RandomAccessIterator split1 = std::partition(first, last,
 						 [pivot](const auto& em){ return em < pivot; });
