@@ -59,7 +59,7 @@ void quicksort(RandomAccessIterator first, RandomAccessIterator last, unsigned t
     // TODO Finish bubblesort call
     bubble_sort(first, last);
 
-  } else if (elementCount > threshold) {
+  } else if (elementCount > 0) {
     // Choose the pivot
     value_type pivot = 0;
     if(isRandomPivot) {
@@ -67,8 +67,8 @@ void quicksort(RandomAccessIterator first, RandomAccessIterator last, unsigned t
         pivot = *(first + pivot);
     }
     else {
-      RandomAccessIterator mid = first + (last - first)/2; 
-      pivot = median(*first, *mid, *(last-1));
+      pivot = *first;
+        
     }
     //    std::cout << "n: " << elementCount << " pivot: " << pivot << std::endl;
 

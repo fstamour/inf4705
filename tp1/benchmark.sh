@@ -30,10 +30,12 @@ mkdir -p results
 
 for file in $FILES; do
     for algo in {0..1}; do
-        for threshold in {1..10}; do
-            echo "Algo $algo, threshold: $threshold, file: $file"
-            ./sort $file $algo $threshold >> results/result_${algo}_${threshold}.csv
-        done
+            echo "Algo $algo, threshold: 1, file: $file"
+            ./sort $file $algo 1 >> results/result_${algo}_1.csv
+            echo "Algo $algo, threshold: 8, file: $file"
+            ./sort $file $algo 8 >> results/result_${algo}_8.csv
     done
+    echo "Algo 2, file: $file"
+    ./sort $file 2 -1 >> results/result_2.csv
 done
 

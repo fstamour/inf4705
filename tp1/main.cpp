@@ -26,7 +26,8 @@ int readTestSet(const string& filename, vector<T>* data) {
 
 enum EAlgo {
   QUICKSORT,
-  QS_RANDOM
+  QS_RANDOM,
+  BUBBLESORT
 };
 
 
@@ -81,6 +82,9 @@ int main (int argc, char** argv) {
       quicksort(data.begin(), data.end(), threshold, true);
     }
     break;
+  case BUBBLESORT:
+      bubble_sort(data.begin(), data.end());
+      break;
   default:
     cerr << "Invalid algo" << endl;
     return 1;
