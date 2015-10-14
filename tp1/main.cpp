@@ -19,8 +19,8 @@ int readTestSet(const string& filename, vector<T>* data) {
   while(!input.eof()) {
     data->push_back(buffer);
     input >> buffer;
-  }  
-  
+  }
+
   return 0;
 }
 
@@ -40,7 +40,7 @@ void showData(const vector<int>& data) {
 int main (int argc, char** argv) {
 
   srand(time(0));
-  
+
   clock_t tStart = 0;
   clock_t tStop = 0;
 
@@ -48,7 +48,8 @@ int main (int argc, char** argv) {
 
   if(!(argc == 3 || argc == 4)) {
     cerr << "Wrong number of parameters" << endl;
-    // TODO Print usage
+    cout << "usage: " << endl;
+    cout << "./sort filename_to_sort(path) algo_to_use(int) threshold(int)" << endl;
     return 1;
   }
 
@@ -65,7 +66,7 @@ int main (int argc, char** argv) {
   cout << "Algo: " << algo << endl;
   cout << "threshold: " << threshold << endl;
   */
-  
+
   readTestSet(filename, &data);
 
   double n = 1;
@@ -87,13 +88,13 @@ int main (int argc, char** argv) {
   tStop = clock();
 
   // To check if its really sorted.
-  // showData(data);
-  
+   //showData(data);
+
   //  cout << "Took: " << dt << " seconds" << endl;
   char sep = ',';
   cout << filename << sep
        << data.size() << sep
        << (tStop - tStart)/n << "\n";
-  
+
   return 0;
 }
