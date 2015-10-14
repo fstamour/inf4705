@@ -18,7 +18,7 @@
 
 ;; List all the result files.
 ;; (It will list _all_ file (recursivly) in the specified directory)
-(def all-result-files (doall (remove #(io/.isDirectory %) (file-seq (io/file "../results-francis")))))
+(def all-result-files (doall (remove #(io/.isDirectory %) (file-seq (io/file "../results")))))
 
 ;;;; Define some functions
 
@@ -58,6 +58,8 @@
 ;; Create a bar chart for a specified N, one bar per threshold.
 ;; Save the chart as chart1.svg
 (defn main []
+	(save results "results.csv")
+
   (let [n 500000
         chart (bar-chart :threshold :time
                          :data ($order :threshold :asc ($where {:n {:eq n}} results))
