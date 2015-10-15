@@ -4,6 +4,8 @@ from pprint import pprint
 import matplotlib.pyplot as plt
 import math
 import numpy
+from scipy import interpolate
+from scipy.optimize import curve_fit, optimize
 
 
 res_0 = {}
@@ -41,44 +43,85 @@ for row in res_0.keys():
 
 print("done")
 
+def f(x):
+    return x*math.log(x, 10)
+
 print("generating plots")
 plots0 = {}
 for key, value in res_0.items():
     if (key[1], key[2]) not in plots0.keys():
-        plots0[(key[1], key[2])] = {"x":[], "y": []}
-    plots0[(key[1], key[2])]["x"].append(math.log(float(key[0])))
-    plots0[(key[1], key[2])]["y"].append(math.log(value))
+        plots0[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [], "y2": []}
+    x = float(key[0])
+    y = value
+    plots0[(key[1], key[2])]["x1"].append(math.log(x))
+    plots0[(key[1], key[2])]["y1"].append(math.log(y))
+    plots0[(key[1], key[2])]["x2"].append(x)
+    plots0[(key[1], key[2])]["y2"].append(float(y)/f(x))
 
 for key, value in plots0.items():
-    x = numpy.array(value["x"])
-    y = numpy.array(value["y"])
+    x = numpy.array(value["x1"])
+    y = numpy.array(value["y1"])
     A = numpy.vstack([x, numpy.ones(len(x))]).T
     m, c = numpy.linalg.lstsq(A,y)[0]
-    plt.plot(x, y, "o", label="original data", markersize=10)
+    plt.plot(x, y, "o", label="test de rapport", markersize=10)
     plt.plot(x, m*x + c, "r", label="Fitted line")
     plt.legend()
-    filename = "plot_0_" + str(key[0]) + "_" + key[1] + ".png"
+    filename = "plot_testrapport_0_" + str(key[0]) + "_" + key[1] + ".png"
     print("saving file : " + filename)
     plt.savefig(filename)
+    plt.cla()
     plt.clf()
+    plt.close()
+
+    points = []
+    for xi, yi in zip(value["x2"], value["y2"]):
+        points.append([xi, yi])
+
+    points.sort(key=lambda x:x[0])
+    plt.plot([i[0] for i in points], [i[1] for i in points], marker='o', linestyle='-', label="test du puissance")
+    plt.legend()
+    filename = "plot_testpuissance_0_" + str(key[0]) + "_" + key[1] + ".png"
+    print("saving file : " + filename)
+    plt.savefig(filename)
+    plt.cla()
+    plt.clf()
+    plt.close()
 
 plots1 = {}
 for key, value in res_1.items():
     if (key[1], key[2]) not in plots1.keys():
-        plots1[(key[1], key[2])] = {"x":[], "y": []}
-    plots1[(key[1], key[2])]["x"].append(math.log(float(key[0])))
-    plots1[(key[1], key[2])]["y"].append(math.log(value))
+        plots1[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [],"y2": []}
+    x = float(key[0])
+    y = value
+    plots1[(key[1], key[2])]["x1"].append(math.log(x))
+    plots1[(key[1], key[2])]["y1"].append(math.log(y))
+    plots1[(key[1], key[2])]["x2"].append(x)
+    plots1[(key[1], key[2])]["y2"].append(y/f(x))
 
 for key, value in plots1.items():
-    x = numpy.array(value["x"])
-    y = numpy.array(value["y"])
+    x = numpy.array(value["x1"])
+    y = numpy.array(value["y1"])
     A = numpy.vstack([x, numpy.ones(len(x))]).T
     m, c = numpy.linalg.lstsq(A,y)[0]
     plt.plot(x, y, "o", label="original data", markersize=10)
     plt.plot(x, m*x + c, "r", label="Fitted line")
     plt.legend()
-    filename = "plot_1_" + str(key[0]) + "_" + key[1] + ".png"
+    filename = "plot_testrapport_1_" + str(key[0]) + "_" + key[1] + ".png"
     print("saving file: " + filename)
+    plt.savefig(filename)
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+    points = []
+    for xi, yi in zip(value["x2"], value["y2"]):
+        points.append([xi, yi])
+
+    points.sort(key=lambda x:x[0])
+    plt.plot([i[0] for i in points], [i[1] for i in points], marker='o', linestyle='-', label="test du puissance")
+    plt.legend()
+    filename = "plot_testpuissance_1_" + str(key[0]) + "_" + key[1] + ".png"
+    print("saving file : " + filename)
     plt.savefig(filename)
     plt.clf()
 
