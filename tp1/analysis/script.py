@@ -48,17 +48,22 @@ def f(x):
 
 print("generating plots")
 plots0 = {}
+# prepare data in plots0
+# plots0 = [ log(x), log(y), x, y/f(x), f(x), y]
 for key, value in res_0.items():
     if (key[1], key[2]) not in plots0.keys():
-        plots0[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [], "y2": []}
+        plots0[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [], "y2": [], "x3": [], "y3": []}
     x = float(key[0])
     y = value
     plots0[(key[1], key[2])]["x1"].append(math.log(x))
     plots0[(key[1], key[2])]["y1"].append(math.log(y))
     plots0[(key[1], key[2])]["x2"].append(x)
     plots0[(key[1], key[2])]["y2"].append(float(y)/f(x))
+    plots0[(key[1], key[2])]["x3"].append(float(f(x)))
+    plots0[(key[1], key[2])]["y3"].append(y)
 
 for key, value in plots0.items():
+    #test du rapport
     x = numpy.array(value["x1"])
     y = numpy.array(value["y1"])
     A = numpy.vstack([x, numpy.ones(len(x))]).T
@@ -73,6 +78,7 @@ for key, value in plots0.items():
     plt.clf()
     plt.close()
 
+    #test de puissance
     points = []
     for xi, yi in zip(value["x2"], value["y2"]):
         points.append([xi, yi])
@@ -87,17 +93,35 @@ for key, value in plots0.items():
     plt.clf()
     plt.close()
 
+    #test des constantes
+    points.clear()
+    for xi, yi in zip(value["x3"], value["y3"]):
+        points.append([xi, yi])
+
+    points.sort(key=lambda x:x[0])
+    plt.plot([i[0] for i in points], [i[1] for i in points], marker='o', linestyle='-', label="test de constantes")
+    plt.legend()
+    filename = "plot_testconstante_0_" + str(key[0]) + "_" + key[1] + ".png"
+    print("saving file : " + filename)
+    plt.savefig(filename)
+    plt.cla()
+    plt.clf()
+    plt.close()
+
 plots1 = {}
 for key, value in res_1.items():
     if (key[1], key[2]) not in plots1.keys():
-        plots1[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [],"y2": []}
+        plots1[(key[1], key[2])] = {"x1":[], "y1": [], "x2": [],"y2": [], "x3": [], "y3": []}
     x = float(key[0])
     y = value
     plots1[(key[1], key[2])]["x1"].append(math.log(x))
     plots1[(key[1], key[2])]["y1"].append(math.log(y))
     plots1[(key[1], key[2])]["x2"].append(x)
     plots1[(key[1], key[2])]["y2"].append(y/f(x))
+    plots1[(key[1], key[2])]["x3"].append(float(f(x)))
+    plots1[(key[1], key[2])]["y3"].append(y)
 
+# test de rapport
 for key, value in plots1.items():
     x = numpy.array(value["x1"])
     y = numpy.array(value["y1"])
@@ -113,6 +137,7 @@ for key, value in plots1.items():
     plt.clf()
     plt.close()
 
+    # test de puissance
     points = []
     for xi, yi in zip(value["x2"], value["y2"]):
         points.append([xi, yi])
@@ -124,5 +149,20 @@ for key, value in plots1.items():
     print("saving file : " + filename)
     plt.savefig(filename)
     plt.clf()
+
+    # test des constantes
+    points.clear()
+    for xi, yi in zip(value["x3"], value["y3"]):
+        points.append([xi, yi])
+
+    points.sort(key=lambda x:x[0])
+    plt.plot([i[0] for i in points], [i[1] for i in points], marker='o', linestyle='-', label="test de constantes")
+    plt.legend()
+    filename = "plot_testconstante_1_" + str(key[0]) + "_" + key[1] + ".png"
+    print("saving file : " + filename)
+    plt.savefig(filename)
+    plt.cla()
+    plt.clf()
+    plt.close()
 
 print("done")
