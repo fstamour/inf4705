@@ -1,0 +1,13 @@
+#!/bin/sh
+
+file=$1
+seuil=$2
+
+if [ -z "$seuil" ]; then
+	echo "Usage: ./quickRandomSeuil <fichier> <seuil>"
+	exit 1
+fi
+
+./sort $file 1 $seuil
+# 1 correspond l'algo "quicksort" avec un pivot choisi aléatoirement. 
+

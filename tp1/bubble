@@ -1,0 +1,13 @@
+#!/bin/sh
+
+file=$1
+
+if [ -z "$file" ]; then
+	echo "Usage: ./bubble <fichier>"
+	exit 1
+fi
+
+./sort $file 2 -1
+# 2 correspond l'algo "bubblesort"
+# le '-1' est un seuil bidon qui ne sera pas utiliser par l'algorithme.
+

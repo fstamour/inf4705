@@ -1,0 +1,13 @@
+#!/bin/sh
+
+file=$1
+
+if [ -z "$file" ]; then
+	echo "Usage: ./quick <fichier>"
+	exit 1
+fi
+
+./sort $file 0  1
+# 0 correspond l'algo "quicksort" avec premier élément comme pivot 
+# Le seuil est fixé à 1
+
