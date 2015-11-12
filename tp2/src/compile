@@ -1,1 +1,0 @@
-g++ -g -Wall -std=c++11 exemplaire_struct.cpp main.cpp

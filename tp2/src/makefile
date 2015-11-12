@@ -1,12 +1,35 @@
 
+CXXFLAGS = --std=c++14
+CXX = g++
+
+.PHONY: default
+default:
+	@echo "Tagets: "
+	@echo "    all"
+	@echo "    dynamique"
+	@echo "    recuitSimule"
+	@echo "    vorace"
+
+
 all: dynamique recuitSimule vorace
 
-dynamique: dynamique.cpp exemplaire_struct.cpp
-	g++ --std=c++14 -g -o $@ $^
+dynamique.cpp recuit_simule.cpp vorace.cpp: template.cpp
+	sed -e 's/ALGO/$(@:.cpp=)/g' $^ > $@
 
-recuitSimule: recuitSimule.cpp
-	g++ --std=c++14 -g -o $@ $^
-vorace: vorace.cpp
-	g++ --std=c++14 -g -o $@ $^
+option_parse.o: option_parse.h option_parse.cpp
+exemplaire_struct.o: exemplaire_struct.h exemplaire_struct.cpp
 
+dynamique: dynamique.cpp exemplaire_struct.o option_parse.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+recuitSimule: recuit_simule.cpp exemplaire_struct.o option_parse.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+vorace: vorace.cpp exemplaire_struct.o option_parse.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+clean:
+	rm -f *.o
+	rm -f dynamique.cpp recuit_simule.cpp vorace.cpp
+	rm -f dynamique recuitSimule vorace
 

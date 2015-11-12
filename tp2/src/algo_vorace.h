@@ -5,7 +5,7 @@
 
 int get_best_fit_box(struct exemplaire * e, int item_size);
 
-void vorace(struct exemplaire * e)
+void mise_en_boite_vorace(struct exemplaire * e)
 {
     std::sort(e->data, e->data + e->nb_element);
     int index = -1;
