@@ -5,9 +5,12 @@ from pprint import pprint as p
 import matplotlib.pyplot as plt
 import sys
 import numpy
+import json
 
 def func_theoric(x):
-    return x * math.log10(x)
+    # return x * math.log10(x)
+    return x*x
+    # return x
 
 def read_data(filename):
     with open(filename, "r") as f:
@@ -38,7 +41,7 @@ def test_rapport(data, filename):
     array_2 = []
     for (serie, size), time in result.items():
         x = float(size)
-        y = time / func_theoric(time)
+        y = time / func_theoric(float(size))
         if serie == 0:
             array_0.append((x,y))
         elif serie == 1:
@@ -54,6 +57,7 @@ def test_rapport(data, filename):
     plt.close()
 
     array_1.sort(key=lambda x:x[0])
+    p(array_1)
     plt.plot([x for (x,y) in array_1], [y for (x,y) in array_1])
     plt.savefig(filename + "10-19_rapport.png")
     plt.cla()
@@ -163,8 +167,11 @@ def test_constante(data, filename):
 
 
 if __name__ == "__main__":
+    f = open("result_moyenne.txt", "w")
     for filename in sys.argv[1:]:
         data = read_data(filename)
+        f.write(filename + "\n")
+        f.write(str(data) + "\n")
         test_rapport(data, filename)
         test_puissance(data, filename)
         test_constante(data, filename)

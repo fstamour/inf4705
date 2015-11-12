@@ -2,23 +2,31 @@
 #define EXEMPLAIRE_STRUCT_H_
 
 #include <vector>
-#include <ctime>
 
 struct exemplaire {
-    // tableau d'item a placer dans les box
+    // Liste des items
     int *data;
-    // tableau des espaces dans chaque box
+    // Liste des boites
     int *space;
-    // tableau des item placer dans les box
+    // Solution courante
     std::vector<int> *result;
+    // Nombre d'element
     int nb_element;
+    // Nombre de boite
     int nb_box;
+    // Capacite de chaque boite
     int capacity;
+    // Le temps pris pour executer l'algo
     clock_t time;
 };
 
+// Charge un exemplaire.
 struct exemplaire * make_exemplaire(char * filename);
+
+// Libere la memoire d'un exemplaire.
 void free_exemplaire(struct exemplaire * e);
+
+// Affiche la solution trouve pour un exemplaire.
 void print_solution(struct exemplaire * e);
 
 #endif /* EXEMPLAIRE_STRUCT_H_ */
