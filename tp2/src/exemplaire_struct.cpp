@@ -63,8 +63,11 @@ struct exemplaire * make_exemplaire(char * filename)
 }
 
 void free_exemplaire(struct exemplaire * e) {
-    delete e->data;
-    delete e->space;
+    delete[] e->data;
+    delete[] e->space;
+    if(e->result != nullptr) {
+        delete[] e->result;
+    }
     delete e;
 }
 
