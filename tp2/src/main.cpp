@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <ctime> // timing
 #include "exemplaire_struct.h"
 #include "algo_vorace.h"
 
@@ -12,6 +13,9 @@ int main(int argc, char ** argv)
     char *filename = nullptr;
     int algo = -1;
     int opt;
+    srand(time(0));
+    clock_t tStart = 0;
+    clock_t tStop = 0;
 
     while((opt = getopt(argc, argv, "pa:f:")) != -1) {
         switch(opt) {
@@ -43,7 +47,10 @@ int main(int argc, char ** argv)
     e = make_exemplaire(filename);
 
     if(algo == 1) {
+        tStart = clock();
         vorace(e);
+        tStop = clock();
+        e->time = tStop - tStart;
         if(do_print) print_solution(e);
     }
 

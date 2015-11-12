@@ -10,6 +10,7 @@ struct exemplaire {
     int nb_element;
     int nb_box;
     int capacity;
+    clock_t time;
 };
 
 struct exemplaire * make_exemplaire(char * filename);
