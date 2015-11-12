@@ -2,6 +2,7 @@
 #define EXEMPLAIRE_STRUCT_H_
 
 #include <vector>
+#include <ctime>
 
 struct exemplaire {
     // Liste des items
