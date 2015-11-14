@@ -7,6 +7,7 @@
 struct exemplaire {
     // Liste des items
     int *data;
+    std::vector<unsigned int> data_;
     // Liste des boites
     int *space;
     // Solution courante
@@ -29,5 +30,8 @@ void free_exemplaire(struct exemplaire * e);
 
 // Affiche la solution trouve pour un exemplaire.
 void print_solution(struct exemplaire * e);
+
+// Optenir la quantite total d'espace occuper
+int get_result_volume(struct exemplaire * e);
 
 #endif /* EXEMPLAIRE_STRUCT_H_ */

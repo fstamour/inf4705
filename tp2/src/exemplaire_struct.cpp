@@ -4,6 +4,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <algorithm>
 
 
 struct exemplaire * make_exemplaire(char * filename)
@@ -44,6 +45,7 @@ struct exemplaire * make_exemplaire(char * filename)
         //e->data.reserve(e->nb_element);
         while((pos = line.find(" ", end)) != std::string::npos) {
             e->data[index] = std::stoi(line.substr(end, pos));
+            e->data_.push_back((unsigned int)std::stoi(line.substr(end, pos)));
             //e->data.push_back(std::stoi(line.substr(end, pos)));
             index++;
             pos++;
@@ -79,4 +81,14 @@ void print_solution(struct exemplaire * e) {
         }
         std::cout << std::endl;
     }
+}
+
+int get_result_volume(struct exemplaire * e){
+    int sum = 0;
+    for(int i = 0; i < e->nb_box; ++i) {
+        std::for_each(e->result[i].begin(), e->result[i].end(), [&] (int value) {
+                sum += value;
+                });
+    }
+    return sum;
 }
