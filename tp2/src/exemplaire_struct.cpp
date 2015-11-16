@@ -52,12 +52,6 @@ struct exemplaire * make_exemplaire(char * filename)
             end = pos;
         }
 
-        std::cout << line << std::endl;
-        std::cout << "data" << std::endl;
-        for(int i=0; i < e->nb_element; ++i){
-            std::cout << e->data[i] << " ";
-        }
-        std::cout << std::endl;
 
         file.close();
     }

@@ -3,6 +3,8 @@
 
 #include "exemplaire_struct.h"
 
+struct recuit_simule_args;
+
 struct Options
 {
 public:
@@ -19,6 +21,21 @@ public:
 
 
     virtual ~Options();
+};
+
+struct RecuitOptions : public Options {
+    struct recuit_simule_args initialize(int argc, char** argv);
+};
+
+struct recuit_simule_args {
+    //nombre de pas maximal
+    int k_max;
+    // temperature initial
+    float t;
+    //palier de refroidissement
+    int p;
+    // coefficient de refroidissement
+    float a;
 };
 
 

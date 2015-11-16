@@ -22,6 +22,8 @@ int main(int argc, char ** argv) {
     tStop = clock();
     e->time = tStop - tStart;
 
+    std::cout << "execution time: " << e->time << std::endl;
+    std::cout << "total volume: " << get_result_volume(e) << std::endl;
     if (opt.verbose_p) {
         print_solution(e);
     }

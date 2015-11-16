@@ -13,7 +13,10 @@ default:
 
 all: dynamique recuitSimule vorace
 
-dynamique.cpp recuit_simule.cpp vorace.cpp: template.cpp
+debug: CXXFLAGS += -g -Wall
+debug: dynamique recuitSimule vorace
+
+dynamique.cpp vorace.cpp: template.cpp
 	sed -e 's/ALGO/$(@:.cpp=)/g' $^ > $@
 
 option_parse.o: option_parse.h option_parse.cpp
@@ -30,6 +33,6 @@ vorace: vorace.cpp exemplaire_struct.o option_parse.o
 
 clean:
 	rm -f *.o
-	rm -f dynamique.cpp recuit_simule.cpp vorace.cpp
+	#rm -f dynamique.cpp recuit_simule.cpp vorace.cpp
 	rm -f dynamique recuitSimule vorace
 
