@@ -7,7 +7,7 @@ int get_best_fit_box(struct exemplaire * e, int item_size);
 
 void mise_en_boite_vorace(struct exemplaire * e)
 {
-    std::sort(e->data, e->data + e->nb_element);
+    std::sort(e->data.begin(), e->data.end());
     int index = -1;
     for(int i = e->nb_element - 1; i >= 0; --i){
         //std ::cout << e->data[i] << " ";
@@ -20,7 +20,7 @@ void mise_en_boite_vorace(struct exemplaire * e)
 
 int get_best_fit_box(struct exemplaire * e, int item_size)
 {
-    unsigned int residual_space = UINT_MAX;
+    unsigned residual_space = UINT_MAX;
     int diff;
     int index = -1;
     for(int i = 0; i < e->nb_box; ++i){

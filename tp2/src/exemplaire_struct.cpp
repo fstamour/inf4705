@@ -14,7 +14,7 @@ struct exemplaire * make_exemplaire(char * filename)
     std::ifstream file (filename);
     unsigned long pos = 0;
     unsigned long end = 0;
-    unsigned int index = 0;
+    unsigned index = 0;
     if(file.is_open())
     {
         // first line
@@ -41,25 +41,22 @@ struct exemplaire * make_exemplaire(char * filename)
         pos = 0;
         end = 0;
         index = 0;
-        e->data = (int *)calloc(1, sizeof(int)*e->nb_element);
-        //e->data.reserve(e->nb_element);
+        e->data.reserve(e->nb_element);
         while((pos = line.find(" ", end)) != std::string::npos) {
-            e->data[index] = std::stoi(line.substr(end, pos));
-            e->data_.push_back((unsigned int)std::stoi(line.substr(end, pos)));
-            //e->data.push_back(std::stoi(line.substr(end, pos)));
-            index++;
+            unsigned poids = std::stoi(line.substr(end, pos));
+            e->data[index++] = poids;
             pos++;
             end = pos;
         }
 
-
         file.close();
+    } else {
+        std::cerr << "Failed to open \"" << filename << "\"" << std::endl;
     }
     return e;
 }
 
 void free_exemplaire(struct exemplaire * e) {
-    delete[] e->data;
     delete[] e->space;
     if(e->result != nullptr) {
         delete[] e->result;

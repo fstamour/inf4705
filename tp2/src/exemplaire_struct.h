@@ -6,8 +6,7 @@
 
 struct exemplaire {
     // Liste des items
-    int *data;
-    std::vector<unsigned int> data_;
+    std::vector<unsigned> data;
     // Liste des boites
     int *space;
     // Solution courante
