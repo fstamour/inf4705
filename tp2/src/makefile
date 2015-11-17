@@ -21,8 +21,9 @@ dynamique.cpp vorace.cpp: template.cpp
 
 option_parse.o: option_parse.h option_parse.cpp
 exemplaire_struct.o: exemplaire_struct.h exemplaire_struct.cpp
+algo_dynamique.o: algo_dynamique.h algo_dynamique.cpp
 
-dynamique: dynamique.cpp exemplaire_struct.o option_parse.o
+dynamique: dynamique.cpp exemplaire_struct.o option_parse.o algo_dynamique.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 recuitSimule: recuit_simule.cpp exemplaire_struct.o option_parse.o
