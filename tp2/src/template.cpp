@@ -25,7 +25,11 @@ int main(int argc, char ** argv) {
     std::cout << "execution time: " << e->time << std::endl;
     std::cout << "total volume: " << get_result_volume(e) << std::endl;
     if (opt.verbose_p) {
+        std::cout << "Nombre d'element " << e->nb_element << "\n";
+        std::cout << "Nombre de boite " << e->nb_box << "\n";
+        std::cout << "Capacite " << e->capacity << "\n";
         print_solution(e);
+        std::cout << std::flush;
     }
 
     free_exemplaire(e);
