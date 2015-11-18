@@ -20,6 +20,7 @@ class SparseTable {
         SparseTable(int m, int c): m(m), c(c) {}
 
        
+        // On vérifie que la clé correspond a une combinaisons valide selon les parametre du probleme.
         bool valid_key_p(const key_t& key) {
             int j = 0;
             int count = 0;
@@ -30,7 +31,6 @@ class SparseTable {
                 count += mu;
                 sum += mu * j;
             }
-            // On vérifie que la clé correspond a une combinaisons valide selon les parametre du probleme.
             if(count != m || sum > m*c) {
                 return false;
             }
@@ -64,55 +64,6 @@ class SparseTable {
         int m;
         int c;
 };
-
-
-// Helper class to generate combinaisons of mu
-class mu_iterator {
-public:
-
-    mu_iterator(int m, int c):
-        m(m), c(c),
-        isDone(false)
-    {
-        it.resize(c+1, 0);
-    }
-    
-    bool next() {
-        increment(0);
-        return !isDone;
-    }
-
-    const vector<int>& get() { return it; }
-
-    void print(std::ostream& out) {
-        for(auto k : it) {
-            out << k << " ";
-        }
-        out << std::endl;
-    }
-
-private:
-
-    int m, c;
-    vector<int> it;
-    bool isDone;
-    
-
-    void increment(int i) {
-        if(it[i] + 1 > m) {
-            if(i == c + 1) {
-                isDone = true;
-            } else {
-                it[i] = 0;
-                increment(i+1);
-            }
-        } else {
-            ++it[i];
-        }
-    }
-
-};
-
 
 void mise_en_boite_dynamique(exemplaire* e) {
     SparseTable<int, int> v(e->nb_box, e->capacity);

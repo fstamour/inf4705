@@ -22,8 +22,9 @@ dynamique.cpp vorace.cpp: template.cpp
 option_parse.o: option_parse.h option_parse.cpp
 exemplaire_struct.o: exemplaire_struct.h exemplaire_struct.cpp
 algo_dynamique.o: algo_dynamique.h algo_dynamique.cpp
+utils.o: utils.h utils.cpp
 
-dynamique: dynamique.cpp exemplaire_struct.o option_parse.o algo_dynamique.o
+dynamique: dynamique.cpp exemplaire_struct.o option_parse.o algo_dynamique.o utils.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 recuitSimule: recuit_simule.cpp exemplaire_struct.o option_parse.o
@@ -32,7 +33,7 @@ recuitSimule: recuit_simule.cpp exemplaire_struct.o option_parse.o
 vorace: vorace.cpp exemplaire_struct.o option_parse.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-test_mu: mu.cpp
+test_mu: mu.cpp utils.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 clean:

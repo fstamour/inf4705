@@ -1,97 +1,40 @@
+/**
+ * Test the "combinatoric generator"
+ */
 
 #include <iostream>
 #include <vector>
 #include <stdexcept>
 
+#include "utils.h"
+
 using std::vector;
 using std::cout;
+using std::endl;
 
-void print(const vector<int>& vi, std::ostream& out) {
-    for(auto i : vi) {
-        out << i << " ";
-    }
-    out << std::endl;
-}
-
-
-struct Combinatoric_generator {
-    // Parameters
-    int n, m;
-
-    // For debugging
-    int level;
-
-    // States
-    int i;
-    vector<int> it;
-    Combinatoric_generator *subgen = nullptr;
-
-    // Ctor
-    Combinatoric_generator(int m, int n, int level = 0):
-        m(m), n(n), i(0), level(level)
-    {
-        it.resize(n, 0);
-        it[0] = m;
-        if(n>2) {
-            subgen = new Combinatoric_generator(m, n-1, level+1);
-        }
-    }
-
-    // Dtor
-    ~Combinatoric_generator() {
-        delete subgen;
-    }
-
-    void reinitialize(int m) {
-        // cout << "Reinit(" << level << ") " << m << std::endl;
-        this->m = m;
-        std::fill(it.begin(), it.end(), 0);
-        i = 0;
-        it[0] = m;
-        if(subgen) {
-            subgen->reinitialize(m);
-        }
-    }
-    
-    bool next() {
-        switch(n) {
-            case 1:
-                --it[0];
-                return it[0] > 0;
-            case 2:
-                --it[0];
-                ++it[1];
-                return it[0] > 0;
-            default:
-                if(!subgen->next()) {
-                    ++i;
-                    // cout << "not next(" << level << ") " << i << std::endl;
-                    subgen->reinitialize(m-i);
-                }
-                auto g = subgen->it;
-                std::copy(g.begin(), g.end(), it.begin());
-                it[it.size()-1] = i;
-                return i <= m;
-        }
-    }
-
-    const vector<int>& get() { return it; }
-};
-
-int main(int argc, char *argv[])
-{
-    int m = 5;
-    int n = 100;
+void test(int m, int n, bool verbose) {
     Combinatoric_generator gen(m, n);
 
     int count = 1;
-    // print(gen.get(), cout);
-    while(gen.next()) {
-        // print(gen.get(), cout);   
+    if(verbose) print(gen.get(), cout);
+    while(gen.next(count % 10000 == 0)) {
+        if(verbose) print(gen.get(), cout);   
         count++;
     }
 
     cout << "Count: " << count << std::endl;
+    cout << std::endl;
+}
+
+int main(int argc, char *argv[])
+{
+    test(5, 1, true);
+    test(5, 2, true);
+    test(5, 3, true);
+    test(5, 4, true);
+//    test(5, 10, true);
+//    test(5, 25, false);
+//    test(4, 100, false);
 
     return 0;
 }
