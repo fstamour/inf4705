@@ -47,7 +47,7 @@ void mise_en_boite_recuit_simule(exemplaire* e, int max_steps, float initial_tem
                 solution[wip.box_index] = wip_solution[wip.box_index];
                 // reinsert all item poped in generated_random_neighbor process
                 for(int i: wip.item_to_reinsert){
-                    e->data_.push_back(i);
+                    e->data.push_back(i);
                 }
                 if(get_occupied_volume(wip_solution, e->nb_box) > get_result_volume(e)) {
                         // copy solution in e->result
@@ -57,7 +57,7 @@ void mise_en_boite_recuit_simule(exemplaire* e, int max_steps, float initial_tem
                 }
             }
             else {
-                e->data_.push_back(wip.item);
+                e->data.push_back(wip.item);
             }
         }
         temperature = temperature * coeficient_refroidissement;
@@ -92,7 +92,7 @@ struct wip_values generate_random_neighbor(struct exemplaire * e, std::vector<in
 
     // randomize item to place
     std::srand(unsigned(std::time(0)));
-    std::random_shuffle(e->data_.begin(), e->data_.end());
+    std::random_shuffle(e->data.begin(), e->data.end());
 
     // item selected to insert (value is size of item)
     //unsigned int random_item = 0;
@@ -100,10 +100,10 @@ struct wip_values generate_random_neighbor(struct exemplaire * e, std::vector<in
     bool inserted = false;
     // current total of selected box
     unsigned int current_total = 0;
-    if(!e->data_.empty()) {
+    if(!e->data.empty()) {
         // select random item in remaining items to place
-        wip.item = e->data_.back();
-        e->data_.pop_back();
+        wip.item = e->data.back();
+        e->data.pop_back();
 
         //wip_sol[wip.box_index] = sol[wip.box_index];
         for(int i = 0; i < e->nb_box; ++i){

@@ -20,7 +20,7 @@ void Options::initialize(int argc, char** argv) {
     if(filename == nullptr) {
         std::cerr
             << "Usage: \n"
-            << " -v              Verbose\n"
+            << " -p              Affiche les resultats\n"
             << " -f <filename>   Examplaire"
             << std::endl;
 

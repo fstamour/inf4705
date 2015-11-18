@@ -2,13 +2,6 @@
 CXXFLAGS = --std=c++14
 CXX = g++
 
-.PHONY: default
-default:
-	@echo "Tagets: "
-	@echo "    all"
-	@echo "    dynamique"
-	@echo "    recuitSimule"
-	@echo "    vorace"
 
 
 all: dynamique recuitSimule vorace
@@ -41,3 +34,11 @@ clean:
 	#rm -f dynamique.cpp recuit_simule.cpp vorace.cpp
 	rm -f dynamique recuitSimule vorace
 
+.PHONY: default
+help:
+	@echo "Tagets: "
+	@echo "    all"
+	@echo "    dynamique"
+	@echo "    recuitSimule"
+	@echo "    vorace"
+	@echo "    help"

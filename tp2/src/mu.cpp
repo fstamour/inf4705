@@ -28,13 +28,13 @@ void test(int m, int n, bool verbose) {
 
 int main(int argc, char *argv[])
 {
-    test(5, 1, true);
-    test(5, 2, true);
-    test(5, 3, true);
-    test(5, 4, true);
+    for(int i = 1; i < 5; ++i) {
+        test(5, i, true);
+    }
 //    test(5, 10, true);
 //    test(5, 25, false);
 //    test(4, 100, false);
+//    test(100, 101, false);   
 
     return 0;
 }

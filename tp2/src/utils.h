@@ -4,7 +4,15 @@
 #include <ostream>
 #include <vector>
 
-void print(const std::vector<int>& vi, std::ostream& out);
+void print(const std::vector<int>& vi, std::ostream& out, bool newline = true);
+
+template<typename T>
+T factorial(T n, T result = 1) {
+    if (n == 1)
+        return result;
+    else
+        return factorial(n - 1, n * result);
+}
 
 class Combinatoric_generator {
 private:
@@ -28,7 +36,7 @@ public:
     ~Combinatoric_generator();
 
     // Init
-    void reinitialize(int m);
+    void reinitialize(int m = -1);
     
     // Compute next state, return true if the next state is valid.
     // (Returns false when there is no more thing to generate.)

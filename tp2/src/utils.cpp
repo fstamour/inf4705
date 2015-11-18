@@ -6,7 +6,7 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-void print(const vector<int>& vi, std::ostream& out) {
+void print(const vector<int>& vi, std::ostream& out, bool newline) {
     for(auto i : vi) {
         out << i << " ";
     }
@@ -28,10 +28,12 @@ Combinatoric_generator::~Combinatoric_generator() {
 }
 
 // Init
-void Combinatoric_generator::reinitialize(int m) {
+void Combinatoric_generator::reinitialize(int _m) {
     // cout << "Reinit(" << level << ") " << m << endl;
-    this->m = m;
-    i = m;;
+    if( _m >= 0 ) {
+        m = _m;
+    }
+    i = m;
     if(subgen) {
         subgen->reinitialize(m-i);
     }

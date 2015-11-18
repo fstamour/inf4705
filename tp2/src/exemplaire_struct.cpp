@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+using std::cout;
+using std::endl;
 
 struct exemplaire * make_exemplaire(char * filename)
 {
@@ -41,11 +43,13 @@ struct exemplaire * make_exemplaire(char * filename)
         pos = 0;
         end = 0;
         index = 0;
-        e->data.reserve(e->nb_element);
+        e->data.resize(e->nb_element);
         while((pos = line.find(" ", end)) != std::string::npos) {
-            unsigned poids = std::stoi(line.substr(end, pos));
-            e->data[index++] = poids;
-            pos++;
+            // cout << index << endl;
+            unsigned volume = std::stoi(line.substr(end, pos));
+            e->data[index] = volume;
+            ++index;
+            ++pos;
             end = pos;
         }
 
