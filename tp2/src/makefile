@@ -32,6 +32,9 @@ recuitSimule: recuit_simule.cpp exemplaire_struct.o option_parse.o
 vorace: vorace.cpp exemplaire_struct.o option_parse.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
+test_mu: mu.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
 clean:
 	rm -f *.o
 	#rm -f dynamique.cpp recuit_simule.cpp vorace.cpp
