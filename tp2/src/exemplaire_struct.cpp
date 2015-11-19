@@ -31,12 +31,13 @@ struct exemplaire * make_exemplaire(char * filename)
         e->nb_box = std::stoi(line.substr(end, pos));
         pos++;
         e->capacity = std::stoi(line.substr(pos, line.size()));
-        e->space.resize(e->nb_box, 0);
+        e->space.resize(e->nb_box, e->capacity);
         /*e->space = new int[e->nb_box];
         for(int i = 0; i < e->nb_box; ++i){
             e->space[i] = e->capacity;
         }*/
-        //e->result = new std::vector<int>[e->nb_box];
+        //e->result = new std::vector<std::vector<int>>[e->nb_box];
+        e->result.resize(e->nb_box);
         //std::cout << "number of element : " << e->nb_element << std::endl;
         //std::cout << "number of boxes : " << e->nb_box << std::endl;
         //std::cout << "capacity : " << e->capacity << std::endl;

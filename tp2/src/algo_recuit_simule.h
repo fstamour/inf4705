@@ -74,14 +74,14 @@ void mise_en_boite_recuit_simule(Options& options)
                 if(get_occupied_volume(wip_solution, e->nb_box) > get_result_volume(e)) {
                     // copy solution in e->result
                     e->result.resize(e->nb_box);
-                    cout << "SIZE: " << e->result.size() << endl;
+                    //cout << "SIZE: " << e->result.size() << endl;
                     for(int k = 0; k < e->nb_box; ++k) {
-                        cout << "K: " << k << endl;
+                        //cout << "K: " << k << endl
                         if(k >= solution.size() ) {
                             cerr << "[mise_en_boite_recuit_simule] k > solution.size()" << endl;
                         }
-                        std::copy(solution[k].begin(), solution[k].end(), e->result[k].begin());
-                        //e->result[k] = solution[k];
+                        //std::copy(solution[k].begin(), solution[k].end(), e->result[k].begin());
+                        e->result[k] = solution[k];
                     }
                 }
             }
