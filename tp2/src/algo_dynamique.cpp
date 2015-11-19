@@ -22,10 +22,12 @@ class SparseTable {
     public:
         // Types
         typedef vector<int> key_t;
+        typedef pair<key_t, T> backtrack_element_t;
 
         // Ctor
         SparseTable(int m, int c, int n): m(m), c(c) {
             m_data.resize(n+1);
+            backtrack_info.resize(n+1);
         }
        
         // On vérifie que la clé correspond a une combinaisons valide selon les parametre du probleme.
@@ -100,13 +102,13 @@ class SparseTable {
                     }
                 }
             }
-            backtrack_info[key] = make_pair(chosen_key, chosen_k);
+            backtrack_info[i][key] = make_pair(chosen_key, chosen_k);
             
             return max;
         }
 
 
-        map<key_t, pair<key_t,T>> backtrack_info;
+        vector<map<key_t, backtrack_element_t>> backtrack_info;
         
     private:
         vector<map<key_t, T>> m_data;
@@ -156,6 +158,24 @@ void fill_table(exemplaire* e, SparseTable<int>& v) {
     }
 }
 
+
+int which(const vector<int>& key1, const vector<int>& key2) {
+    if(key1.size() != key2.size()) {
+        throw std::logic_error("[which] key1 and key2.");
+    }
+    size_t i = 0;
+    for(; i < key2.size(); ++i) {
+        if(key1[i] - key2[i] > 0) {
+            break;
+        }
+    }
+    if(i == key2.size()) {
+        // Not found
+        return -1;
+    }
+    return i;
+}
+
 void find_solution(exemplaire* e, const SparseTable<int>& v) {
     /////////////////////////////////////////////////////
     //////////////////// TODO ///////////////////////////
@@ -169,7 +189,55 @@ void find_solution(exemplaire* e, const SparseTable<int>& v) {
     cout << "i = " << e->data.size();
     cout << "VTOT: " << v.get(e->data.size(), key) << endl;
     cout << "\n";
-    //cout << 
+    
+    vector<int> box_capacity(e->nb_box, e->capacity);
+
+    int i = e->nb_element;
+    while(true) {
+        // Arret premature
+        if(is_timeout(e))
+            exit_timeout();
+
+        unsigned volume = e->data[i];
+        auto it = v.backtrack_info[i].find(key);
+        if(it == v.backtrack_info[i].end()) {
+            break;
+        }
+        const SparseTable<int>::backtrack_element_t& be = it->second;
+        auto key2 = be.first;
+        print(key, cout, true);
+        print(key2, cout, true);
+        print(box_capacity, cout, true);
+
+        int w = which(key, key2);
+        
+        if(w < 0) {
+            cout << "Element " << i << "(v=" << volume << ") was not used." << endl;
+        } else {
+            auto it2 = box_capacity.begin();
+            int j = 0;
+            while(it2 != box_capacity.end()) {
+                if(*it2 == w) {
+                    break;
+                }
+                ++j;
+                ++it2;
+            }
+            /*if(it2 == box_capacity.end()) {
+                throw std::logic_error("Box not found");
+            }*/
+            // On soustrait le volume de l'objet courant a la capacite de la boite.
+            *it2 -= volume;
+            cout << "Element " << i << "(v=" << volume << ") was put in (" << w << ") " << j << endl;
+        }
+        --i;
+        key = key2;
+
+        // Fail-safe
+        if(i < -10) {
+            break;
+        }
+    }
 }
 
 void mise_en_boite_dynamique(Options& options) {
