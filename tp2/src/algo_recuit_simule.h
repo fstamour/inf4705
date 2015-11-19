@@ -57,7 +57,7 @@ void mise_en_boite_recuit_simule(Options& options)
         for(int j = 0; j < palier_refroidissement; ++j) {
             // need box selected + item selected
             wip = generate_random_neighbor(e, solution, wip_solution, data);
-            if(wip.empty){
+            if(wip.empty || is_timeout(e)){
                 // no more data to process
                 // all items are place
                 // return
