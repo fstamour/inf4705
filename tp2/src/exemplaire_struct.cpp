@@ -101,7 +101,7 @@ int get_result_volume(struct exemplaire * e){
 
 
 bool is_timeout(struct exemplaire* e) {
-    return float(clock() - e->start_time)/CLOCKS_PER_SEC > 3*60.0;
+    return float(clock() - e->start_time)/CLOCKS_PER_SEC > 5*60.0;
 }
 
 void exit_timeout() {

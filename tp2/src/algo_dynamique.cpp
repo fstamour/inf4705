@@ -3,6 +3,7 @@
 #include <climits>
 #include <vector>
 #include <map>
+#include <deque>
 #include <stdexcept>
 
 #include "algo_dynamique.h"
@@ -58,7 +59,7 @@ class SparseTable {
                 return -1;
             }
 
-            auto it = m_data[i-1].find(key);
+            auto it = m_data[i].find(key);
             if(it == m_data[i].end()) {
                 throw std::logic_error("[SparseTable::get] Tried to access uninitialized value.");
             }
@@ -109,6 +110,18 @@ class SparseTable {
 
 
         vector<map<key_t, backtrack_element_t>> backtrack_info;
+
+        void dump_data(std::ostream& out) {
+            int i = 0;
+            for(auto it: m_data) {
+                out << i << endl;
+                for(auto j: it) {
+                    out << "\t" << j.second << " ";
+                }
+                ++i;
+            }
+            out << endl;
+        }
         
     private:
         vector<map<key_t, T>> m_data;
@@ -124,7 +137,6 @@ void fill_table(exemplaire* e, SparseTable<int>& v) {
     vector<int> key(col_size);
 
     // Pour chaque objet.
-    cout << e->data.size() << endl;
     for(int i = 1; i <= e->data.size(); ++i) {
         // std::cerr << "." << std::flush;
         unsigned volume = e->data[i-1];
@@ -149,8 +161,8 @@ void fill_table(exemplaire* e, SparseTable<int>& v) {
             // print(key, cout, true);
         } while(keygen.next());
 
-            int max = v.compute_max_volume(i, volume, key);
-            v.set(i, key, max);
+        int max = v.compute_max_volume(i, volume, key);
+        v.set(i, key, max);
 
         /*cout << "V(" << i << ", (";
         print(key, cout, false);
@@ -158,39 +170,14 @@ void fill_table(exemplaire* e, SparseTable<int>& v) {
     }
 }
 
-
-int which(const vector<int>& key1, const vector<int>& key2) {
-    if(key1.size() != key2.size()) {
-        throw std::logic_error("[which] key1 and key2.");
-    }
-    size_t i = 0;
-    for(; i < key2.size(); ++i) {
-        if(key1[i] - key2[i] > 0) {
-            break;
-        }
-    }
-    if(i == key2.size()) {
-        // Not found
-        return -1;
-    }
-    return i;
-}
-
 void find_solution(exemplaire* e, const SparseTable<int>& v) {
-    /////////////////////////////////////////////////////
-    //////////////////// TODO ///////////////////////////
-    /////////////////////////////////////////////////////
-
     vector<int> key(e->capacity + 1);
     std::fill(key.begin(), key.end(), 0);
     key[key.size()-1] = e->nb_box;        
     //print(key, cout, true);
-    cout << "\n";
-    cout << "i = " << e->data.size();
-    cout << "VTOT: " << v.get(e->data.size(), key) << endl;
-    cout << "\n";
     
     vector<int> box_capacity(e->nb_box, e->capacity);
+    e->result.resize(e->nb_box);
 
     int i = e->nb_element;
     while(true) {
@@ -198,40 +185,41 @@ void find_solution(exemplaire* e, const SparseTable<int>& v) {
         if(is_timeout(e))
             exit_timeout();
 
-        unsigned volume = e->data[i];
+        // Retreive backtrack information.
         auto it = v.backtrack_info[i].find(key);
         if(it == v.backtrack_info[i].end()) {
             break;
         }
         const SparseTable<int>::backtrack_element_t& be = it->second;
-        auto key2 = be.first;
-        print(key, cout, true);
-        print(key2, cout, true);
-        print(box_capacity, cout, true);
+        auto chosen_key = be.first;
+        int chosen_k = be.second;
 
-        int w = which(key, key2);
-        
-        if(w < 0) {
-            cout << "Element " << i << "(v=" << volume << ") was not used." << endl;
-        } else {
+        // Si l'objet a été mit dans une boite de capacité k.
+        if(chosen_k > 0) {
+            //cout << "key1: ";
+            //print(key, cout, true);
+            //cout << "chosen_key: ";
+            //print(chosen_key, cout, true);
+            //print(box_capacity, cout, true);
+
             auto it2 = box_capacity.begin();
             int j = 0;
             while(it2 != box_capacity.end()) {
-                if(*it2 == w) {
+                if(*it2 == chosen_k) {
                     break;
                 }
                 ++j;
                 ++it2;
             }
-            /*if(it2 == box_capacity.end()) {
-                throw std::logic_error("Box not found");
-            }*/
             // On soustrait le volume de l'objet courant a la capacite de la boite.
+            int volume = e->data[i-1];
             *it2 -= volume;
-            cout << "Element " << i << "(v=" << volume << ") was put in (" << w << ") " << j << endl;
+            /*cout << "Element " << i << "(v=" << volume << ") was put in (chosen_k=" << chosen_k 
+                << ") " << j << "\n" << endl;*/
+            e->result[j].push_back(volume);
         }
         --i;
-        key = key2;
+        key = chosen_key;
 
         // Fail-safe
         if(i < -10) {
@@ -249,7 +237,6 @@ void mise_en_boite_dynamique(Options& options) {
     double numerator = factorial<double>(m + c);
     double denumerator = factorial<double>(m)*factorial<double>(c);
     double rat = numerator/denumerator;
-    cout << rat << endl;
     if(rat > 5e8) {
         // On bail-out quand on croit que c'est trop gros.
         throw std::out_of_range("This is too much.");
@@ -258,6 +245,9 @@ void mise_en_boite_dynamique(Options& options) {
     // Initialisation du tableau
     SparseTable<int> v(e->nb_box, e->capacity, e->nb_element);
     fill_table(e, v);
+
+    //v.dump_data(cout);
+    //return;
 
     // On calcul le contenue des boites en parcourant le tableau.
     find_solution(e, v);
