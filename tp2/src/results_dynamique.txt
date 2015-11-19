@@ -1,0 +1,174 @@
+execution time: 2319650
+total volume: 198
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 17 82 
+boite 1: 99 
+---
+execution time: 2336726
+total volume: 198
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 99 
+boite 1: 33 66 
+---
+execution time: 2251489
+total volume: 182
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 47 45 
+boite 1: 90 
+---
+execution time: 2412739
+total volume: 190
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 93 1 
+boite 1: 95 1 
+---
+execution time: 2442875
+total volume: 198
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 7 92 
+boite 1: 2 44 53 
+---
+execution time: 2324095
+total volume: 200
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 49 51 
+boite 1: 2 98 
+---
+execution time: 2393867
+total volume: 194
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 53 13 32 
+boite 1: 45 51 
+---
+execution time: 2307919
+total volume: 194
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 23 75 
+boite 1: 95 1 
+---
+execution time: 2453623
+total volume: 199
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 27 18 20 35 
+boite 1: 81 18 
+---
+execution time: 2389133
+total volume: 199
+Nombre d'element 10
+Nombre de boite 2
+Capacite 100
+boite 0: 90 4 6 
+boite 1: 28 62 9 
+---
+execution time: 105591810
+total volume: 296
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 8 78 12 
+boite 1: 63 23 14 
+boite 2: 98 
+---
+execution time: 136710729
+total volume: 288
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 23 44 31 
+boite 1: 85 6 
+boite 2: 22 38 39 
+---
+execution time: 111083213
+total volume: 293
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 85 12 
+boite 1: 46 33 21 
+boite 2: 39 57 
+---
+execution time: 100690956
+total volume: 273
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 40 48 
+boite 1: 92 
+boite 2: 93 
+---
+execution time: 120520388
+total volume: 284
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 26 66 
+boite 1: 40 56 
+boite 2: 17 79 
+---
+execution time: 114151887
+total volume: 286
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 49 49 
+boite 1: 16 78 3 
+boite 2: 43 24 24 
+---
+execution time: 103824535
+total volume: 295
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 29 32 39 
+boite 1: 98 
+boite 2: 75 22 
+---
+execution time: 103774540
+total volume: 290
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 96 
+boite 1: 95 
+boite 2: 17 50 32 
+---
+execution time: 111819932
+total volume: 290
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 74 1 25 
+boite 1: 32 20 46 
+boite 2: 35 57 
+---
+execution time: 103711296
+total volume: 293
+Nombre d'element 10
+Nombre de boite 3
+Capacite 100
+boite 0: 73 15 10 
+boite 1: 98 
+boite 2: 97 
+---
+Timeout
+---
+Timeout
+---
