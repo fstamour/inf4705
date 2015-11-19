@@ -10,6 +10,8 @@
 
 using std::map;
 using std::vector;
+using std::pair;
+using std::make_pair;
 
 using std::cout;
 using std::endl;
@@ -27,7 +29,7 @@ class SparseTable {
         }
        
         // On vérifie que la clé correspond a une combinaisons valide selon les parametre du probleme.
-        bool valid_key_p(const key_t& key) {
+        bool valid_key_p(const key_t& key) const {
             if(key.size() != c+1) {
                 return false;
             }
@@ -44,7 +46,7 @@ class SparseTable {
         }
 
         // Get values from the table
-        T get(int i, const key_t& key) {
+        T get(int i, const key_t& key) const {
             // Si le nombre d'item est nul.
             if(i == 0) {
                 return 0;
@@ -69,9 +71,13 @@ class SparseTable {
         T compute_max_volume(int i, T volume, const key_t& key) {
             // Valeur si on ne met pas l'objet i.
             T max = get(i-1, key);
-            vector<int> key2(c+1);
+            vector<int> key2(key.size());
 
             // print(key, cout, true);
+            T chosen_k = 0;
+            vector<int> chosen_key;
+            chosen_key.resize(key.size());
+            std::copy(key.begin(), key.end(), chosen_key.begin());
            
             // Valeur si on met l'objet dans une boite de capacite k
             for(T k = volume; k < c+1; ++k) {
@@ -89,15 +95,22 @@ class SparseTable {
                     int value = volume + get(i-1, key2);
                     if( value > max ) {
                         max = value;
+                        chosen_k = k;
+                        std::copy(key2.begin(), key2.end(), chosen_key.begin());
                     }
                 }
             }
+            backtrack_info[key] = make_pair(chosen_key, chosen_k);
+            
             return max;
         }
 
-    private:
 
+        map<key_t, pair<key_t,T>> backtrack_info;
+        
+    private:
         vector<map<key_t, T>> m_data;
+        // vector<
         int m;
         int c;
 };
@@ -122,6 +135,9 @@ void fill_table(exemplaire* e, SparseTable<int>& v) {
        
         // Pour chaque clef
         do {
+            // Arret premature
+            if(is_timeout(e))
+                exit_timeout();
             int max = v.compute_max_volume(i, volume, key);
             v.set(i, key, max);
 
@@ -145,9 +161,19 @@ void find_solution(exemplaire* e, const SparseTable<int>& v) {
     //////////////////// TODO ///////////////////////////
     /////////////////////////////////////////////////////
 
+    vector<int> key(e->capacity + 1);
+    std::fill(key.begin(), key.end(), 0);
+    key[key.size()-1] = e->nb_box;        
+    //print(key, cout, true);
+    cout << "\n";
+    cout << "i = " << e->data.size();
+    cout << "VTOT: " << v.get(e->data.size(), key) << endl;
+    cout << "\n";
+    //cout << 
 }
 
-void mise_en_boite_dynamique(exemplaire* e) {
+void mise_en_boite_dynamique(Options& options) {
+    exemplaire* e = options.get_exemplaire();
     int m = e->nb_box;
     int c = e->capacity;
 
@@ -168,9 +194,4 @@ void mise_en_boite_dynamique(exemplaire* e) {
     // On calcul le contenue des boites en parcourant le tableau.
     find_solution(e, v);
 
-    /*std::fill(key.begin(), key.end(), 0);
-    key[key.size()-1] = e->nb_box;        
-    //print(key, cout, true);
-    cout << "i = " << e->data.size();
-    cout << "VTOT: " << v.get(e->data.size(), key) << endl;*/
 }

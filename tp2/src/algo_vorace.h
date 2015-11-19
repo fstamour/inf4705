@@ -1,12 +1,15 @@
 #include <iostream>
-#include "exemplaire_struct.h"
 #include <algorithm>
 #include <climits>
 
+#include "exemplaire_struct.h"
+#include "option_parse.h"
+
 int get_best_fit_box(struct exemplaire * e, int item_size);
 
-void mise_en_boite_vorace(struct exemplaire * e)
+void mise_en_boite_vorace(Options& options)
 {
+    struct exemplaire * e = options.get_exemplaire();
     std::sort(e->data.begin(), e->data.end());
     int index = -1;
     for(int i = e->nb_element - 1; i >= 0; --i){

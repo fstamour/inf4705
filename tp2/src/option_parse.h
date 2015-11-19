@@ -3,31 +3,24 @@
 
 #include "exemplaire_struct.h"
 
-struct recuit_simule_args;
+enum class Algo {
+    dynamique,
+    recuit_simule,
+    vorace
+};
 
-struct Options
+class Options
 {
 public:
     // Convention: *_p  -> predicate -> boolean
     // Pas besoin de chercher pour un verbe (e.g. isVerboseOn)
+    
+    /// Options communne
     bool verbose_p = false;
     char *filename = nullptr;
+    struct exemplaire * exemplaire = nullptr;
 
-    void initialize(int argc, char** argv);
-
-    struct exemplaire* getExemplaire() const {
-        return make_exemplaire(filename);
-    }
-
-
-    virtual ~Options();
-};
-
-struct RecuitOptions : public Options {
-    struct recuit_simule_args initialize(int argc, char** argv);
-};
-
-struct recuit_simule_args {
+    /// Options specifique au recuit simule
     //nombre de pas maximal
     int k_max;
     // temperature initial
@@ -36,6 +29,18 @@ struct recuit_simule_args {
     int p;
     // coefficient de refroidissement
     float a;
+        
+    virtual void initialize(Algo algo, int argc, char** argv);
+    virtual void initialize_recuit(int argc, char** argv);
+
+    struct exemplaire* get_exemplaire() {
+        if(exemplaire == nullptr) {
+            exemplaire = make_exemplaire(filename);
+        }
+        return exemplaire;
+    }
+
+    virtual ~Options();
 };
 
 

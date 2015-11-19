@@ -10,17 +10,18 @@
 
 int main(int argc, char ** argv) {
     Options opt;
-    opt.initialize(argc, argv);
+    opt.initialize(Algo::ALGO, argc, argv);
 
-    clock_t tStart = 0;
-    clock_t tStop = 0;
+    struct exemplaire * e = opt.get_exemplaire();
 
-    struct exemplaire * e = opt.getExemplaire();
+    clock_t& start_time = e->start_time;
+    start_time = 0;
+    clock_t stop_time = 0;
 
-    tStart = clock();
-    mise_en_boite_ALGO(e);
-    tStop = clock();
-    e->time = tStop - tStart;
+    start_time = clock();
+    mise_en_boite_ALGO(opt);
+    stop_time = clock();
+    e->time = stop_time - start_time;
 
     std::cout << "execution time: " << e->time << std::endl;
     std::cout << "total volume: " << get_result_volume(e) << std::endl;
@@ -30,7 +31,10 @@ int main(int argc, char ** argv) {
         std::cout << "Capacite " << e->capacity << "\n";
         print_solution(e);
         std::cout << std::flush;
+        
+        //std::cout << "element restant: " << std::endl;
+        //for(unsigned int i = 0; i < e->data_.size(); i++){
+            //std::cout << e->data_[i] << " ";
+        //}
     }
-
-    free_exemplaire(e);
 }
