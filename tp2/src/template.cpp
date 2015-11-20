@@ -23,12 +23,12 @@ int main(int argc, char ** argv) {
     stop_time = clock();
     e->time = stop_time - start_time;
 
-    std::cout << "execution time: " << e->time << std::endl;
-    std::cout << "total volume: " << get_result_volume(e) << std::endl;
+    std::cout << "execution time\t" << e->time << "\t";
+    std::cout << "total volume\t" << get_result_volume(e) << "\t";
     if (opt.verbose_p) {
-        std::cout << "Nombre d'element " << e->nb_element << "\n";
-        std::cout << "Nombre de boite " << e->nb_box << "\n";
-        std::cout << "Capacite " << e->capacity << "\n";
+        std::cout << "Nombre d'element\t" << e->nb_element << "\t";
+        std::cout << "Nombre de boite\t" << e->nb_box << "\t";
+        std::cout << "Capacite\t" << e->capacity << "\t";
         print_solution(e);
         std::cout << std::flush;
         

@@ -4,7 +4,6 @@ rm -f results_vorace.txt
 RESULT_FILE=results_vorace.txt
 
 for file in `find ../MiseEnBoite -type f | sort -n`; do
-    echo $file
+    echo $file #>> $RESULT_FILE
     ./vorace -pf $file | tee -a $RESULT_FILE
-    echo "---" >> $RESULT_FILE
 done;

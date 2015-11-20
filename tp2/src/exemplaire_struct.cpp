@@ -74,12 +74,14 @@ void print_solution(struct exemplaire * e) {
         return;
     }
     for(int i = 0; i < e->nb_box; ++i) {
-        std::cout << "boite " << i << ": ";
+        std::cout << "boite " << i << "\t";
         for(unsigned int j = 0; j < e->result[i].size(); ++j) {
             std::cout << e->result[i][j] << " ";
         }
-        std::cout << std::endl;
+        std::cout << "\t";
+        
     }
+    std::cout << std::endl;
 }
 
 int get_result_volume(struct exemplaire * e){
