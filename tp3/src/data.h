@@ -19,6 +19,9 @@ struct ProblemData {
     int nb_employee = -1;
     // La liste des écosystemes.
     std::vector<ecosystem_t> ecosystem;
+
+    // Methode pour afficher les données du probleme dans un flux.
+    void print(std::ostream& out) const;
 };
 
 /// Lit un fichier contenant les données du probleme et retourne un objet 
