@@ -5,8 +5,9 @@ CXX = g++
 all: horaire
 
 data.o: data.cpp data.h
+stats.o: stats.cpp stats.h
 
-horaire: main.cpp data.o
+horaire: main.cpp data.o stats.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 clean:

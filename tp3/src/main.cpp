@@ -1,7 +1,9 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "data.h"
+#include "stats.h"
 
 using std::cout;
 using std::cerr;
@@ -10,14 +12,24 @@ using std::string;
 
 int main(int argc, char *argv[])
 {
-    string filename = "../Biodome/biodome1.dat";
-    // Parse command-line options
+    // TODO Parse command-line options
     
-
-    // Read data
-    
-    ProblemData data = make_problem_data(filename);
-    data.print(cout);
+    // Pour analyser les datasets: on les charges tous.
+    // (Plus tard, on pourrait ajouter un flag pour faire cette operations)
+    Stats<> s_employee, s_ecosystem;
+    for(int i = 1; i <= 15; ++i) {
+        std::ostringstream oss;
+        oss << "../Biodome/biodome" << i << ".dat";
+        ProblemData data = make_problem_data(oss.str());
+        //data.print(cout);
+        auto nep = data.nb_employee;
+        s_employee.add_data(nep);
+        auto nec = data.ecosystem.size();
+        s_ecosystem.add_data(nec);
+    }
+    s_employee.print_summary(cout, "Employee");
+    cout << "\n";
+    s_ecosystem.print_summary(cout, "Ecosystem");
     
     // Eval data
     
