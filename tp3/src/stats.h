@@ -4,6 +4,7 @@
 #include <ostream>
 #include <string>
 #include <cmath>
+#include <vector>
 
 // Brainstorm:
 // count, avg, variance(standard deviation), mode
@@ -42,6 +43,10 @@ public:
         sum += d;
         sum_of_squares += d*d;
         mean = sum/n;
+    }
+
+    void add_data(const std::vector<data_t>& data) {
+        for(auto datum : data) { add_data(datum); }
     }
 
     void reset() {
