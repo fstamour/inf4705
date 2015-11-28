@@ -16,7 +16,7 @@ ProblemData make_problem_data(const string& filename) {
     int nb_ecosystem = -1;
     in >> nb_ecosystem;
     data.ecosystem.resize(nb_ecosystem);
-    
+
     // Lit le nombre d'employés.
     in >> data.nb_employee;
 
@@ -25,10 +25,11 @@ ProblemData make_problem_data(const string& filename) {
         // Lit le nombre d'animaux.
         int nb_animals = -1;
         in >> nb_animals;
-        
+
         // Alias pour l'écosystemes courant.
         ecosystem_t& e = data.ecosystem[i];
-        e.reserve(nb_animals);
+        e.eco.reserve(nb_animals);
+        e.id = i;
 
         // Pour chaque animaux.
         for(int j = 0; j < nb_animals; ++j) {
@@ -36,9 +37,9 @@ ProblemData make_problem_data(const string& filename) {
             animal_contrib_t animal;
             in >> animal;
             // On le merge-insert afin d'avoir la liste d'animal en ordre croissant.
-            ecosystem_t::iterator it = std::find_if(e.begin(), e.end(),
+            auto it = std::find_if(e.eco.begin(), e.eco.end(),
                  [&animal] (const animal_contrib_t& a) { return a > animal; });
-            e.insert(it, animal);
+            e.eco.insert(it, animal);
         }
     }
 
@@ -50,9 +51,9 @@ void ProblemData::print(std::ostream& out) const {
     out << ecosystem.size() << " " << nb_employee << "\n";
     // Pour chaque ecosysteme.
     for(const ecosystem_t& e : ecosystem) {
-        out << e.size();
+        out << e.eco.size();
         // Pour chaque animal.
-        for(const animal_contrib_t& a : e) {
+        for(const animal_contrib_t& a : e.eco) {
             out << " " << a;
         }
         out << std::endl;

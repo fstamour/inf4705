@@ -12,7 +12,11 @@ typedef int employee_t;
 typedef int animal_contrib_t;
 
 // Le type représentant les écosystemes sont une liste d'animaux.
-typedef std::vector<animal_contrib_t> ecosystem_t;
+//typedef std::vector<animal_contrib_t> ecosystem_t;
+typedef struct ecosystem_t  {
+    std::vector<animal_contrib_t> eco;
+    int id;
+} ecosystem_t;
 
 struct ProblemData {
     // Le nombre d'employés.

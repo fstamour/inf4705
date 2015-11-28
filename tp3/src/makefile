@@ -6,8 +6,13 @@ all: horaire
 
 data.o: data.cpp data.h
 stats.o: stats.cpp stats.h
+solution.o: solution.cpp solution.h
+algo_recuit.o: algo_recuit.cpp algo_recuit.h
 
 horaire: main.cpp data.o stats.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+algo_recuit: main.cpp algo_recuit.o solution.o data.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 stats: horaire
