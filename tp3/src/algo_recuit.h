@@ -4,8 +4,9 @@
 #include <vector>
 #include <iostream> // cout, endl
 #include <string>
-#include <algorithm> // for_each
-#include <random>
+#include <algorithm> // for_each, accumulate
+#include <random> // default_random_engine, uniform_real_distribution, random_device
+#include <cmath>
 
 #include "data.h"
 #include "solution.h"
@@ -18,6 +19,15 @@ using std::accumulate;
 using std::for_each;
 using std::default_random_engine;
 using std::uniform_real_distribution;
+using std::uniform_int_distribution;
+using std::random_device;
+using std::mt19937;
+using std::advance;
+using std::exp;
+using std::pair;
+using std::max_element;
+using std::min_element;
+using std::distance;
 
 class AlgoRecuit
 {
@@ -31,10 +41,15 @@ class AlgoRecuit
 
         // algorithm data
         float temperature;
-        int coeficient_refroidissement;
+        float coeficient_refroidissement;
         int max_steps;
-        default_random_engine generator;
-        uniform_real_distribution<float> distribution;
+        // random selection of an ecosystem
+        // or an employe
+        //random_device rd;
+        mt19937 int_gen{random_device{}()};
+        // random float (0,1) for metropolis criteria
+        default_random_engine float_generator;
+        uniform_real_distribution<float> float_distribution;
 
         // method for managing external use
         AlgoRecuit(string filename, int steps=100);
@@ -47,12 +62,20 @@ class AlgoRecuit
         bool is_new_solution();
         void print_solution();
         void print_solution(Solution * sol);
-        void generate_ecosystem_solution(ecosystem_t eco, Solution * wip);
+        void generate_ecosystem_solution(ecosystem_t eco, Solution * wip, int starting_id, int nb_employes);
 
         // method for algorithm (should be private but privacy selfishness
+
+        // take one animal and change employe in same ecosystem
         void generate_neighboor_solution();
+        // swap two animals from two employes in same ecosystem
+        void generate_neighboor_solution_swap();
+        // select employe1 with most weight and employe2 with least weight and transfer
+        void generate_neighboor_solution_transfer();
+
         float calculate_delta(Solution * sol1, Solution * sol2);
         bool metropolis_criteria(float delta, float temperature);
+        int random_int(int min, int max);
 };
 
 #endif

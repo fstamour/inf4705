@@ -4,10 +4,13 @@
 #include <vector>
 #include <map>
 #include <cmath>
+#include <limits>
+#include <algorithm> // accumulate
 
 using std::vector;
 using std::map;
 using std::sqrt;
+using std::accumulate;
 
 // list of tasks(animal type) per employee
 typedef vector<int> employe_task_t;
@@ -21,6 +24,6 @@ struct Solution {
     vector<ecosystem_sol_t> ecosystems;
 };
 
-float solution_standard_deviation(Solution * sol);
+double solution_standard_deviation(Solution * sol);
 
 #endif
