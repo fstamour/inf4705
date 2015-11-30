@@ -28,6 +28,7 @@ using std::pair;
 using std::max_element;
 using std::min_element;
 using std::distance;
+using std::discrete_distribution;
 
 class AlgoRecuit
 {
@@ -72,10 +73,16 @@ class AlgoRecuit
         void generate_neighboor_solution_swap();
         // select employe1 with most weight and employe2 with least weight and transfer
         void generate_neighboor_solution_transfer();
+        // select like generate_neighboor_solution_transfer but
+        // probabilty of selection is proportionel to weigh
+        // for employe selection and animal selection
+        void generate_neighboor_solution_proportional_probabilty();
 
         float calculate_delta(Solution * sol1, Solution * sol2);
         bool metropolis_criteria(float delta, float temperature);
         int random_int(int min, int max);
+        int random_employe_per_weight(ecosystem_sol_t * eco);
+        int random_animal_per_weight(vector<int>* tasks);
 };
 
 #endif

@@ -108,7 +108,8 @@ void AlgoRecuit::run_one_loop() {
     float delta;
     for(int i = 0; i < max_steps; ++i){
         *wip_sol = *current_sol;
-        generate_neighboor_solution_transfer();
+        //generate_neighboor_solution_transfer();
+        generate_neighboor_solution_proportional_probabilty();
         delta = calculate_delta(current_sol, wip_sol);
         if(metropolis_criteria(delta, temperature)){
             *current_sol = *wip_sol;
@@ -302,6 +303,50 @@ void AlgoRecuit::generate_neighboor_solution_transfer() {
     (*eco)[min_key].push_back(max_animal);
 }
 
+void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
+
+    // select random ecosystem_sol_t
+    // select random ecosystem with a least 2 employe
+    int max = data.ecosystem.size() - 1;
+    if(max == 0){
+        cout << "\x1b[37mERROR DATA.ECOSYSTEM.SIZE IS 0\x1b[0m" << endl;
+        cout << "\x1b[35m" << max << endl;
+    }
+    int index;
+    ecosystem_sol_t * eco;
+    do {
+        index = random_int(0, max);
+        eco = &wip_sol->ecosystems[index];
+    } while(eco->size() < 2);
+
+
+    // random select two employe
+    int key_employe1, key_employe2;
+    do {
+        key_employe1 = random_employe_per_weight(eco);
+        key_employe2 = random_employe_per_weight(eco);
+    }
+    while (key_employe1 == key_employe2);
+
+    vector<int> &tasks_employe1 = (*eco)[key_employe1];
+    vector<int> &tasks_employe2 = (*eco)[key_employe2];
+
+    // random select animals to swap
+    int task1_index, task2_index;
+    task1_index = random_animal_per_weight(&tasks_employe1);
+    task2_index = random_animal_per_weight(&tasks_employe2);
+
+    // swap animals
+    int animal_value1 = tasks_employe1[task1_index];
+    int animal_value2 = tasks_employe2[task2_index];
+
+    tasks_employe1.erase(tasks_employe1.begin() + task1_index);
+    tasks_employe2.erase(tasks_employe2.begin() + task2_index);
+
+    tasks_employe1.push_back(animal_value2);
+    tasks_employe2.push_back(animal_value1);
+}
+
 float AlgoRecuit::calculate_delta(Solution * sol1, Solution * sol2) {
     float s1 = solution_standard_deviation(sol1);
     float s2 = solution_standard_deviation(sol2);
@@ -335,4 +380,39 @@ bool AlgoRecuit::is_new_solution() {
 
 int AlgoRecuit::random_int(int min, int max) {
     return uniform_int_distribution<int>{min, max}(int_gen);
+}
+
+int AlgoRecuit::random_employe_per_weight(ecosystem_sol_t * eco){
+    // vector of <employe_id, sum of hours>
+    vector<pair<int,int>> sums;
+    int total_sum = 0;
+    int current_sum = 0;
+    for(auto i: (*eco)){
+        current_sum = accumulate(i.second.begin(), i.second.end(), 0);
+        sums.push_back(pair<int, int>(i.first, current_sum));
+        total_sum += current_sum;
+    }
+
+    vector<float> weights;
+    for(auto sum: sums){
+        weights.push_back((float)sum.second / (float)total_sum);
+    }
+
+    discrete_distribution<> dist(weights.begin(), weights.end());
+    mt19937 gen(random_device{}());
+    auto employe = sums[dist(gen)];
+    return employe.first;
+}
+
+int AlgoRecuit::random_animal_per_weight(vector<int> * tasks) {
+
+    int sum = accumulate(tasks->begin(), tasks->end(), 0);
+    vector<float> weights;
+    for(auto w: *tasks){
+        weights.push_back((float)w/(float)sum);
+    }
+
+    discrete_distribution<> dist(weights.begin(), weights.end());
+    mt19937 gen(random_device{}());
+    return dist(gen);
 }
