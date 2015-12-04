@@ -19,6 +19,10 @@ debug: horaire
 profile: CXXFLAGS += -p
 profile: horaire
 
+# $(shell pkg-config --libs --cflags opencl-utils)
+opencl: CXXFLAGS += -g -lOpenCL
+opencl: test_opencl.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
 clean:
 	rm -f *.o
