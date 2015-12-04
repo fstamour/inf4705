@@ -1,6 +1,8 @@
-#include "algo_recuit.h"
 #include <chrono>
 #include <thread>
+#include <stdexcept>
+
+#include "algo_recuit.h"
 
 AlgoRecuit::AlgoRecuit(const ProblemData& data_, int steps):
     data(data),
@@ -17,70 +19,11 @@ AlgoRecuit::AlgoRecuit(const ProblemData& data_, int steps):
 }
 
 void AlgoRecuit::init_solution(Solution *sol) {
-    if( sol != nullptr ) {
-        *best_sol = *sol;
-        *current_sol = *sol;
-        return;
+    if(sol == nullptr) {
+        throw std:logic_error("Initializing with NULL solution");
     }
-    //// Si sol == nullptr => On génère une solution.
-    unsigned int sum = 0;
-    // distribution of employe according to weight of each ecosystem
-    unsigned int current_sum = 0;
-    for(auto ecosystem: data.ecosystem) {
-        for(auto animal_charge: ecosystem) {
-            sum += animal_charge;
-        }
-    }
-
-    float weight = 0.0;
-    int nb_employes;
-    int total_employes = data.nb_employee;
-    // Pour chaque ecosysteme
-    for(size_t i; i < data.ecosystem.size; ++i) {
-        current_sum = data.stats[i].get_sum();
-        weight = (float)current_sum / (float)sum;
-        nb_employes = (int)((float)total_employes * weight);
-        generate_ecosystem_solution(ecosystem, i, wip_sol, total_employes, nb_employes);
-        sum -= current_sum;
-        total_employes -= nb_employes;
-        ++i;
-    }
-    *best_sol = *current_sol = *wip_sol;
-
-}
-
-void AlgoRecuit::generate_ecosystem_solution(const ecosystem_t& ecosystem, size_t ecosystem_id, Solution * wip, int starting_id, int nb_employes) {
-    int employe_id = starting_id - 1;
-    ecosystem_sol_t & e = wip->ecosystems[ecosystem_id];
-using std::discrete_distribution;
-    for(int i = starting_id - nb_employes; i < starting_id; i++) {
-        e[i] = vector<int>();
-    }
-    for(auto animal_weight: ecosystem) {
-        e[employe_id].push_back(animal_weight);
-        employe_id--;
-        if(employe_id < starting_id - nb_employes || employe_id < 0) {
-            employe_id = starting_id - 1;
-        }
-    }
-}
-
-void AlgoRecuit::print_solution(Solution * sol) {
-    int eco_id = 0;
-    int current_total = 0;
-    for(auto eco_sol: sol->ecosystems) {
-        cout << "eco : " << eco_id << " size: " << eco_sol.size() << endl;
-        eco_id++;
-        for(auto sol: eco_sol) {
-            cout << "employe id : " << sol.first << " [ ";
-            for(auto animal: sol.second) {
-                cout << animal << " ";
-                current_total += animal;
-            }
-            cout << "] = " << current_total << endl;
-            current_total = 0;
-        }
-    }
+    *best_sol = *sol;
+    *current_sol = *sol;
 }
 
 void AlgoRecuit::run_one_loop() {
@@ -95,7 +38,7 @@ void AlgoRecuit::run_one_loop() {
      *      update temperature
      */
     float delta;
-    for(int i = 0; i < max_steps; ++i){
+    for(int i = 0; i < max_steps; ++i) {
         *wip_sol = *current_sol;
         //generate_neighboor_solution_transfer();
         generate_neighboor_solution_proportional_probabilty();
@@ -345,7 +288,6 @@ float AlgoRecuit::calculate_delta(const Solution& sol1, const Solution& sol2) {
 }
 
 bool AlgoRecuit::metropolis_criteria(float delta, float temperature) {
-
     if(delta > 0.0)
         return true;
     if(delta == 0){
@@ -368,7 +310,7 @@ bool AlgoRecuit::is_new_solution() {
 }
 
 int AlgoRecuit::random_int(int min, int max) {
-    // FIXME Creation of a new PRNG is really coslty.
+    // FIXME MAYBE Creation of a new PRNG is really coslty.
     return uniform_int_distribution<int>{min, max}(int_gen);
 }
 
@@ -406,3 +348,4 @@ int AlgoRecuit::random_animal_per_weight(vector<int> * tasks) {
     mt19937 gen(random_device{}());
     return dist(gen);
 }
+
