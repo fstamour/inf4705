@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     AlgoRecuit algo(filename, steps);
 
     algo.init_solution();
+    algo.print_solution(algo.best_sol, verbose_p);
     while(true){
         algo.run_one_loop();
         if(algo.new_solution) {
