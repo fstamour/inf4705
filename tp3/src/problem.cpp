@@ -2,12 +2,12 @@
 #include <fstream>
 #include <algorithm>
 
-#include "data.h"
+#include "problem.h"
 
 using std::string;
 
-ProblemData make_problem_data(const string& filename) {
-    ProblemData data;
+Problem make_problem_data(const string& filename) {
+    Problem data;
 
     // Ouvre le fichier
     std::ifstream in(filename);
@@ -16,7 +16,7 @@ ProblemData make_problem_data(const string& filename) {
     int nb_ecosystem = -1;
     in >> nb_ecosystem;
     data.ecosystem.resize(nb_ecosystem);
-
+    
     // Lit le nombre d'employés.
     in >> data.nb_employee;
 
@@ -25,21 +25,16 @@ ProblemData make_problem_data(const string& filename) {
         // Lit le nombre d'animaux.
         int nb_animals = -1;
         in >> nb_animals;
-
+        
         // Alias pour l'écosystemes courant.
         ecosystem_t& e = data.ecosystem[i];
-        e.eco.reserve(nb_animals);
-        e.id = i;
+        e.resize(nb_animals, -1);
+        data.stats.resize(nb_animals);
 
         // Pour chaque animaux.
         for(int j = 0; j < nb_animals; ++j) {
             // On lit l'animal
-            animal_contrib_t animal;
-            in >> animal;
-            // On le merge-insert afin d'avoir la liste d'animal en ordre croissant.
-            auto it = std::find_if(e.eco.begin(), e.eco.end(),
-                 [&animal] (const animal_contrib_t& a) { return a > animal; });
-            e.eco.insert(it, animal);
+            in >> e[j];
         }
     }
 
@@ -47,16 +42,31 @@ ProblemData make_problem_data(const string& filename) {
 }
 
 
-void ProblemData::print(std::ostream& out) const {
+void Problem::print(std::ostream& out) const {
     out << ecosystem.size() << " " << nb_employee << "\n";
     // Pour chaque ecosysteme.
     for(const ecosystem_t& e : ecosystem) {
-        out << e.eco.size();
+        out << e.size();
         // Pour chaque animal.
-        for(const animal_contrib_t& a : e.eco) {
+        for(const animal_contrib_t& a : e) {
             out << " " << a;
         }
         out << std::endl;
     }
 }
+
+
+void Problem::compute_stats() {
+    for(size_t i = 0; i < ecosystem.size(); ++i) {
+        stats[i].add_data(ecosystem[i]);
+    }
+}
+
+
+void Problem::sort() {
+    for(auto& e : ecosystem) {
+        std::sort(e.begin(), e.end());
+    }
+}
+
 

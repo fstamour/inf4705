@@ -2,19 +2,10 @@
 #include <chrono>
 #include <thread>
 
-AlgoRecuit::AlgoRecuit(string filename, int steps) {
-    data = make_problem_data(filename);
+AlgoRecuit::AlgoRecuit(const ProblemData& data_, int steps):
+    data(data),
     max_steps = steps;
-    init();
-}
-
-AlgoRecuit::AlgoRecuit(ProblemData data_, int steps) {
-    data = data_;
-    max_steps = steps;
-    init();
-}
-
-void AlgoRecuit::init() {
+{
     wip_sol = new Solution();
     current_sol = new Solution();
     best_sol = new Solution();
@@ -25,49 +16,47 @@ void AlgoRecuit::init() {
     coeficient_refroidissement = 0.99;
 }
 
-AlgoRecuit::~AlgoRecuit() {
-}
-
-void AlgoRecuit::init_solution() {
+void AlgoRecuit::init_solution(Solution *sol) {
+    if( sol != nullptr ) {
+        *best_sol = *sol;
+        *current_sol = *sol;
+        return;
+    }
+    //// Si sol == nullptr => On génère une solution.
     unsigned int sum = 0;
     // distribution of employe according to weight of each ecosystem
     unsigned int current_sum = 0;
     for(auto ecosystem: data.ecosystem) {
-        for(auto animal_type: ecosystem.eco) {
-            sum += animal_type;
+        for(auto animal_charge: ecosystem) {
+            sum += animal_charge;
         }
     }
 
     float weight = 0.0;
     int nb_employes;
     int total_employes = data.nb_employee;
-    for(auto ecosystem: data.ecosystem){
-        current_sum = accumulate(ecosystem.eco.begin(), ecosystem.eco.end(), 0);
+    // Pour chaque ecosysteme
+    for(size_t i; i < data.ecosystem.size; ++i) {
+        current_sum = data.stats[i].get_sum();
         weight = (float)current_sum / (float)sum;
         nb_employes = (int)((float)total_employes * weight);
-        auto e = ecosystem_sol_t();
-        wip_sol->ecosystems.push_back(e);
-        generate_ecosystem_solution(ecosystem, wip_sol, total_employes, nb_employes);
+        generate_ecosystem_solution(ecosystem, i, wip_sol, total_employes, nb_employes);
         sum -= current_sum;
         total_employes -= nb_employes;
-
+        ++i;
     }
     *best_sol = *current_sol = *wip_sol;
 
 }
 
-void AlgoRecuit::init_solution(Solution *sol) {
-    *best_sol = *sol;
-    *current_sol = *sol;
-}
-
-void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * wip, int starting_id, int nb_employes) {
+void AlgoRecuit::generate_ecosystem_solution(const ecosystem_t& ecosystem, size_t ecosystem_id, Solution * wip, int starting_id, int nb_employes) {
     int employe_id = starting_id - 1;
-    ecosystem_sol_t & e = wip->ecosystems[ecosystem.id];
+    ecosystem_sol_t & e = wip->ecosystems[ecosystem_id];
+using std::discrete_distribution;
     for(int i = starting_id - nb_employes; i < starting_id; i++) {
         e[i] = vector<int>();
     }
-    for(auto animal_weight: ecosystem.eco) {
+    for(auto animal_weight: ecosystem) {
         e[employe_id].push_back(animal_weight);
         employe_id--;
         if(employe_id < starting_id - nb_employes || employe_id < 0) {
@@ -347,9 +336,9 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
     tasks_employe2.push_back(animal_value1);
 }
 
-float AlgoRecuit::calculate_delta(Solution * sol1, Solution * sol2) {
-    float s1 = solution_standard_deviation(sol1);
-    float s2 = solution_standard_deviation(sol2);
+float AlgoRecuit::calculate_delta(const Solution& sol1, const Solution& sol2) {
+    float s1 = sol1->std_deviation();
+    float s2 = sol2->std_deviation();
     //cout << "sol1 - sol2" << endl;
     //cout << s1 << " - " << s2 << " = " << s1 - s2 << endl;
     return s1 - s2;
@@ -379,6 +368,7 @@ bool AlgoRecuit::is_new_solution() {
 }
 
 int AlgoRecuit::random_int(int min, int max) {
+    // FIXME Creation of a new PRNG is really coslty.
     return uniform_int_distribution<int>{min, max}(int_gen);
 }
 

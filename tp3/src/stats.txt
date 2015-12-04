@@ -1,0 +1,591 @@
+../Biodome/biodome1.dat
+=======================
+Nb employe:   11
+Ecosystem 0
+-----------
+N:         17
+Sum:       591
+Min:       11
+Max:       59
+Mean:      34.7647
+Std. Dev.: 13.1217
+Ecosystem 1
+-----------
+N:         11
+Sum:       356
+Min:       14
+Max:       49
+Mean:      32.3636
+Std. Dev.: 10.9068
+
+../Biodome/biodome2.dat
+=======================
+Nb employe:   11
+Ecosystem 0
+-----------
+N:         16
+Sum:       479
+Min:       10
+Max:       74
+Mean:      29.9375
+Std. Dev.: 14.3678
+Ecosystem 1
+-----------
+N:         13
+Sum:       404
+Min:       16
+Max:       47
+Mean:      31.0769
+Std. Dev.: 10.2542
+
+../Biodome/biodome3.dat
+=======================
+Nb employe:   10
+Ecosystem 0
+-----------
+N:         11
+Sum:       317
+Min:       12
+Max:       49
+Mean:      28.8182
+Std. Dev.: 12.3937
+Ecosystem 1
+-----------
+N:         15
+Sum:       448
+Min:       16
+Max:       52
+Mean:      29.8667
+Std. Dev.: 9.71505
+
+../Biodome/biodome4.dat
+=======================
+Nb employe:   12
+Ecosystem 0
+-----------
+N:         16
+Sum:       494
+Min:       10
+Max:       54
+Mean:      30.875
+Std. Dev.: 11.2131
+Ecosystem 1
+-----------
+N:         14
+Sum:       507
+Min:       11
+Max:       58
+Mean:      36.2143
+Std. Dev.: 12.4394
+
+../Biodome/biodome5.dat
+=======================
+Nb employe:   10
+Ecosystem 0
+-----------
+N:         14
+Sum:       425
+Min:       13
+Max:       56
+Mean:      30.3571
+Std. Dev.: 11.1906
+Ecosystem 1
+-----------
+N:         14
+Sum:       493
+Min:       16
+Max:       56
+Mean:      35.2143
+Std. Dev.: 9.00141
+
+../Biodome/biodome6.dat
+=======================
+Nb employe:   15
+Ecosystem 0
+-----------
+N:         11
+Sum:       324
+Min:       10
+Max:       58
+Mean:      29.4545
+Std. Dev.: 12.8443
+Ecosystem 1
+-----------
+N:         14
+Sum:       413
+Min:       17
+Max:       53
+Mean:      29.5
+Std. Dev.: 9.31013
+Ecosystem 2
+-----------
+N:         17
+Sum:       526
+Min:       11
+Max:       61
+Mean:      30.9412
+Std. Dev.: 13.2286
+
+../Biodome/biodome7.dat
+=======================
+Nb employe:   18
+Ecosystem 0
+-----------
+N:         14
+Sum:       494
+Min:       10
+Max:       61
+Mean:      35.2857
+Std. Dev.: 14.3499
+Ecosystem 1
+-----------
+N:         14
+Sum:       509
+Min:       18
+Max:       67
+Mean:      36.3571
+Std. Dev.: 14.1956
+Ecosystem 2
+-----------
+N:         15
+Sum:       433
+Min:       11
+Max:       59
+Mean:      28.8667
+Std. Dev.: 12.0547
+
+../Biodome/biodome8.dat
+=======================
+Nb employe:   17
+Ecosystem 0
+-----------
+N:         15
+Sum:       506
+Min:       13
+Max:       49
+Mean:      33.7333
+Std. Dev.: 10.3116
+Ecosystem 1
+-----------
+N:         15
+Sum:       497
+Min:       13
+Max:       59
+Mean:      33.1333
+Std. Dev.: 10.0589
+Ecosystem 2
+-----------
+N:         13
+Sum:       381
+Min:       10
+Max:       45
+Mean:      29.3077
+Std. Dev.: 9.44934
+
+../Biodome/biodome9.dat
+=======================
+Nb employe:   17
+Ecosystem 0
+-----------
+N:         13
+Sum:       462
+Min:       18
+Max:       50
+Mean:      35.5385
+Std. Dev.: 9.45935
+Ecosystem 1
+-----------
+N:         15
+Sum:       454
+Min:       14
+Max:       51
+Mean:      30.2667
+Std. Dev.: 9.62266
+Ecosystem 2
+-----------
+N:         14
+Sum:       509
+Min:       18
+Max:       51
+Mean:      36.3571
+Std. Dev.: 9.52145
+
+../Biodome/biodome10.dat
+========================
+Nb employe:   18
+Ecosystem 0
+-----------
+N:         18
+Sum:       631
+Min:       13
+Max:       68
+Mean:      35.0556
+Std. Dev.: 14.0019
+Ecosystem 1
+-----------
+N:         14
+Sum:       444
+Min:       14
+Max:       69
+Mean:      31.7143
+Std. Dev.: 15.2101
+Ecosystem 2
+-----------
+N:         11
+Sum:       383
+Min:       17
+Max:       74
+Mean:      34.8182
+Std. Dev.: 18.0596
+
+../Biodome/biodome11.dat
+========================
+Nb employe:   34
+Ecosystem 0
+-----------
+N:         12
+Sum:       493
+Min:       16
+Max:       59
+Mean:      41.0833
+Std. Dev.: 12.7832
+Ecosystem 1
+-----------
+N:         14
+Sum:       478
+Min:       13
+Max:       69
+Mean:      34.1429
+Std. Dev.: 14.7593
+Ecosystem 2
+-----------
+N:         17
+Sum:       639
+Min:       14
+Max:       65
+Mean:      37.5882
+Std. Dev.: 12.4431
+Ecosystem 3
+-----------
+N:         12
+Sum:       494
+Min:       20
+Max:       78
+Mean:      41.1667
+Std. Dev.: 14.5077
+Ecosystem 4
+-----------
+N:         11
+Sum:       516
+Min:       24
+Max:       78
+Mean:      46.9091
+Std. Dev.: 17.0798
+Ecosystem 5
+-----------
+N:         14
+Sum:       606
+Min:       26
+Max:       59
+Mean:      43.2857
+Std. Dev.: 10.4501
+
+../Biodome/biodome12.dat
+========================
+Nb employe:   38
+Ecosystem 0
+-----------
+N:         16
+Sum:       673
+Min:       13
+Max:       73
+Mean:      42.0625
+Std. Dev.: 15.421
+Ecosystem 1
+-----------
+N:         14
+Sum:       561
+Min:       21
+Max:       64
+Mean:      40.0714
+Std. Dev.: 12.0325
+Ecosystem 2
+-----------
+N:         15
+Sum:       616
+Min:       23
+Max:       60
+Mean:      41.0667
+Std. Dev.: 10.0031
+Ecosystem 3
+-----------
+N:         15
+Sum:       600
+Min:       18
+Max:       58
+Mean:      40
+Std. Dev.: 10.6708
+Ecosystem 4
+-----------
+N:         13
+Sum:       519
+Min:       25
+Max:       49
+Mean:      39.9231
+Std. Dev.: 7.73067
+Ecosystem 5
+-----------
+N:         15
+Sum:       609
+Min:       21
+Max:       75
+Mean:      40.6
+Std. Dev.: 14.2492
+
+../Biodome/biodome13.dat
+========================
+Nb employe:   40
+Ecosystem 0
+-----------
+N:         13
+Sum:       589
+Min:       31
+Max:       64
+Mean:      45.3077
+Std. Dev.: 10.291
+Ecosystem 1
+-----------
+N:         17
+Sum:       747
+Min:       24
+Max:       85
+Mean:      43.9412
+Std. Dev.: 16.2787
+Ecosystem 2
+-----------
+N:         15
+Sum:       552
+Min:       14
+Max:       56
+Mean:      36.8
+Std. Dev.: 11.3619
+Ecosystem 3
+-----------
+N:         14
+Sum:       497
+Min:       24
+Max:       54
+Mean:      35.5
+Std. Dev.: 8.65819
+Ecosystem 4
+-----------
+N:         15
+Sum:       662
+Min:       22
+Max:       69
+Mean:      44.1333
+Std. Dev.: 14.3474
+Ecosystem 5
+-----------
+N:         15
+Sum:       648
+Min:       21
+Max:       66
+Mean:      43.2
+Std. Dev.: 13.3726
+
+../Biodome/biodome14.dat
+========================
+Nb employe:   40
+Ecosystem 0
+-----------
+N:         15
+Sum:       699
+Min:       23
+Max:       68
+Mean:      46.6
+Std. Dev.: 9.95859
+Ecosystem 1
+-----------
+N:         13
+Sum:       584
+Min:       23
+Max:       64
+Mean:      44.9231
+Std. Dev.: 12.7186
+Ecosystem 2
+-----------
+N:         14
+Sum:       563
+Min:       20
+Max:       61
+Mean:      40.2143
+Std. Dev.: 10.3867
+Ecosystem 3
+-----------
+N:         19
+Sum:       894
+Min:       12
+Max:       79
+Mean:      47.0526
+Std. Dev.: 15.028
+Ecosystem 4
+-----------
+N:         16
+Sum:       604
+Min:       12
+Max:       58
+Mean:      37.75
+Std. Dev.: 12.306
+Ecosystem 5
+-----------
+N:         11
+Sum:       515
+Min:       20
+Max:       67
+Mean:      46.8182
+Std. Dev.: 13.3881
+
+../Biodome/biodome15.dat
+========================
+Nb employe:   74
+Ecosystem 0
+-----------
+N:         14
+Sum:       395
+Min:       11
+Max:       48
+Mean:      28.2143
+Std. Dev.: 9.11183
+Ecosystem 1
+-----------
+N:         15
+Sum:       475
+Min:       16
+Max:       57
+Mean:      31.6667
+Std. Dev.: 11.394
+Ecosystem 2
+-----------
+N:         12
+Sum:       380
+Min:       14
+Max:       47
+Mean:      31.6667
+Std. Dev.: 10.8346
+Ecosystem 3
+-----------
+N:         14
+Sum:       438
+Min:       16
+Max:       47
+Mean:      31.2857
+Std. Dev.: 9.85921
+Ecosystem 4
+-----------
+N:         12
+Sum:       364
+Min:       14
+Max:       46
+Mean:      30.3333
+Std. Dev.: 10.5066
+Ecosystem 5
+-----------
+N:         11
+Sum:       381
+Min:       16
+Max:       49
+Mean:      34.6364
+Std. Dev.: 10.9981
+Ecosystem 6
+-----------
+N:         12
+Sum:       326
+Min:       12
+Max:       45
+Mean:      27.1667
+Std. Dev.: 8.39477
+Ecosystem 7
+-----------
+N:         12
+Sum:       362
+Min:       11
+Max:       69
+Mean:      30.1667
+Std. Dev.: 15.3668
+Ecosystem 8
+-----------
+N:         12
+Sum:       350
+Min:       11
+Max:       46
+Mean:      29.1667
+Std. Dev.: 11.6464
+Ecosystem 9
+-----------
+N:         14
+Sum:       500
+Min:       11
+Max:       55
+Mean:      35.7143
+Std. Dev.: 10.525
+Ecosystem 10
+------------
+N:         15
+Sum:       434
+Min:       15
+Max:       47
+Mean:      28.9333
+Std. Dev.: 9.41252
+Ecosystem 11
+------------
+N:         14
+Sum:       457
+Min:       13
+Max:       58
+Mean:      32.6429
+Std. Dev.: 16.1316
+Ecosystem 12
+------------
+N:         12
+Sum:       334
+Min:       11
+Max:       50
+Mean:      27.8333
+Std. Dev.: 11.5097
+Ecosystem 13
+------------
+N:         15
+Sum:       450
+Min:       11
+Max:       55
+Mean:      30
+Std. Dev.: 12.474
+Ecosystem 14
+------------
+N:         14
+Sum:       418
+Min:       14
+Max:       55
+Mean:      29.8571
+Std. Dev.: 10.4119
+
+=================
+
+Employee
+--------
+N:         15
+Sum:       365
+Min:       10
+Max:       74
+Mean:      24.3333
+Std. Dev.: 17.1878
+
+EcosystemS
+----------
+N:         15
+Sum:       64
+Min:       2
+Max:       15
+Mean:      4.26667
+Std. Dev.: 3.2755

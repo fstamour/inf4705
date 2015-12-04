@@ -20,25 +20,13 @@ class Stats {
     comp_t n = 0;
     comp_t sum = 0;
     comp_t mean = 0;
-    comp_t min = 0;
-    comp_t max = 0;
 
     // Utilisé pour calcule la variance.
     comp_t sum_of_squares = 0;
 
-    bool first = true;
-
 public:
 
     void add_data(const data_t& d) {
-        if(first) {
-            min = d;
-            max = d;
-            first = false;
-        } else {
-            if(d < min) min = d;
-            if(d > max) max = d;
-        }
         ++n;
         sum += d;
         sum_of_squares += d*d;
@@ -49,24 +37,41 @@ public:
         for(auto datum : data) { add_data(datum); }
     }
 
+    void remove_data(const data_t d) {
+        if(n = 0) {
+            throw std::logic_error("[Stats] Removed more data than added.");
+        }
+        --n;
+        sum -= d;
+        sum_of_squares -= d*d;
+        mean = sum/n;
+    }
+
+    void remove_data(const std::vector<data_t>& data) {
+        for(auto datum : data) { remove_data(datum); }
+    }
+
     void reset() {
         n = 0;
         sum = 0;
         mean = 0;
-        first = true;
     }
 
     comp_t get_n() const { return n; }
     comp_t get_sum() const { return sum; }
     comp_t get_mean() const { return mean; }
-    comp_t get_min() const { return min; }
-    comp_t get_max() const { return max; }
-    comp_t get_variance() const { return sum_of_squares/n - mean*mean; }
+    comp_t get_variance() const {
+        // Shouldn't happen...
+         /*if(n == 0){
+             return std::numeric_limits<comp_t>::max();
+         }*/
+        return sum_of_squares/n - mean*mean; }
     comp_t get_std_deviation() const { return sqrt(get_variance()); }
 
     void print_summary(std::ostream& out, const std::string& title = "") {
         if(title.size()) {
             out << title << "\n";
+	    // "Soulignement" du titre
             for(size_t i = 0; i < title.size(); ++i) {
                 out << "-";
             }
@@ -74,8 +79,6 @@ public:
         }
         out << "N:         " << n << "\n";
         out << "Sum:       " << sum << "\n";
-        out << "Min:       " << min << "\n";
-        out << "Max:       " << max << "\n";
         out << "Mean:      " << mean << "\n";
         out << "Std. Dev.: " << get_std_deviation() << "\n";
     }
