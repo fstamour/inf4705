@@ -1,5 +1,5 @@
 
-CXXFLAGS = --std=c++14 -g -Wall -pedantic
+CXXFLAGS = --std=c++14 -g -Wall -pedantic -pthread 
 CXX = g++
 
 all: horaire

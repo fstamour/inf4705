@@ -53,11 +53,10 @@ class AlgoRecuit
         uniform_real_distribution<float> float_distribution;
 
         // method for managing external use
-        AlgoRecuit(string filename, int steps=100);
         AlgoRecuit(ProblemData data, int steps=100);
         ~AlgoRecuit();
         void init();
-        void init_solution();
+        void init_solution(bool new_best = false);
         void init_solution(Solution *sol);
         void run_one_loop();
         bool is_new_solution();

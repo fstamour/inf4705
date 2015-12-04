@@ -2,12 +2,6 @@
 #include <chrono>
 #include <thread>
 
-AlgoRecuit::AlgoRecuit(string filename, int steps) {
-    data = make_problem_data(filename);
-    max_steps = steps;
-    init();
-}
-
 AlgoRecuit::AlgoRecuit(ProblemData data_, int steps) {
     data = data_;
     max_steps = steps;
@@ -22,38 +16,37 @@ void AlgoRecuit::init() {
     uniform_real_distribution<float> float_distribution(0.0, 1.0);
     // TODO make them parametrisable
     temperature = 1.0;
-    coeficient_refroidissement = 0.99;
+    coeficient_refroidissement = 0.995;
 }
 
 AlgoRecuit::~AlgoRecuit() {
 }
 
-void AlgoRecuit::init_solution() {
-    unsigned int sum = 0;
-    // distribution of employe according to weight of each ecosystem
-    unsigned int current_sum = 0;
-    for(auto ecosystem: data.ecosystem) {
-        for(auto animal_type: ecosystem.eco) {
-            sum += animal_type;
-        }
+void AlgoRecuit::init_solution(bool new_best) {
+    
+    // Nombre d'employe par ecosysteme.
+    vector<int> nb_employes(data.ecosystem.size(), 1);
+    
+    size_t i = 0;
+    for(; i < data.nb_employee - data.ecosystem.size(); ++i) {
+        // Choose random ecosystem
+        nb_employes[random_int(0, data.ecosystem.size() - 1)] += 1;
     }
-
-    float weight = 0.0;
-    int nb_employes;
-    int total_employes = data.nb_employee;
+    
+    wip_sol->ecosystems.resize(0);
+    
+    i = 0;
     for(auto ecosystem: data.ecosystem){
-        current_sum = accumulate(ecosystem.eco.begin(), ecosystem.eco.end(), 0);
-        weight = (float)current_sum / (float)sum;
-        nb_employes = (int)((float)total_employes * weight);
         auto e = ecosystem_sol_t();
         wip_sol->ecosystems.push_back(e);
-        generate_ecosystem_solution(ecosystem, wip_sol, total_employes, nb_employes);
-        sum -= current_sum;
-        total_employes -= nb_employes;
-
+        generate_ecosystem_solution(ecosystem, wip_sol, data.nb_employee, nb_employes[i]);
+        ++i;
     }
-    *best_sol = *current_sol = *wip_sol;
-
+    
+    *current_sol = *wip_sol;
+    if(new_best) {
+        *best_sol = *current_sol;
+    }
 }
 
 void AlgoRecuit::init_solution(Solution *sol) {
@@ -63,10 +56,13 @@ void AlgoRecuit::init_solution(Solution *sol) {
 
 void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * wip, int starting_id, int nb_employes) {
     int employe_id = starting_id - 1;
+    
+    // initialise la map de tache par employe
     ecosystem_sol_t & e = wip->ecosystems[ecosystem.id];
     for(int i = starting_id - nb_employes; i < starting_id; i++) {
-        e[i] = vector<int>();
+        e[i].resize(0);
     }
+    
     for(auto animal_weight: ecosystem.eco) {
         e[employe_id].push_back(animal_weight);
         employe_id--;
@@ -325,6 +321,7 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
     // random select two employe
     int key_employe1, key_employe2;
     do {
+        // TODO bool upDown pour biaise le random vers une tandance souhaitee
         key_employe1 = random_employe_per_weight(eco);
         key_employe2 = random_employe_per_weight(eco);
     }

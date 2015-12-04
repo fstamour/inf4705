@@ -2,11 +2,13 @@
 #include <sstream>
 #include <string>
 #include <unistd.h> // For option parsing.
+#include <thread>
 
 #include "data.h"
 #include "stats.h"
 #include "algo_recuit.h"
 
+#define STEPS_RECUIT 100
 
 template<typename T>
 std::string to_string(const T& x) {
@@ -20,10 +22,12 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::thread;
 
 // Calcul et affiche quelques statistiques sur toute les données.
 void general_stats() {
 }
+void start_thread(ProblemData data, bool verbose_p);
 
 int main(int argc, char *argv[])
 {
@@ -50,18 +54,70 @@ int main(int argc, char *argv[])
                 //cerr << "Unrecognized option"
         }
     }
-    // TODO Check if arguments are valid.
+    
+    if( filename != "" )
+    {
+        ProblemData data = make_problem_data(filename);
+        int nb_thread = 4;
+        std::vector<std::thread> threads;
+        
+        // TODO For each thread
+        for(int i = 0; i < nb_thread; ++i)
+        {
+            threads.push_back(thread( [data,verbose_p]() 
+            {
+                AlgoRecuit algo(data, STEPS_RECUIT);
 
-    AlgoRecuit algo(filename, steps);
-
-    algo.init_solution();
-    algo.print_solution(algo.best_sol, verbose_p);
-    while(true){
-        algo.run_one_loop();
-        if(algo.new_solution) {
-            algo.print_solution(algo.best_sol, verbose_p);
-            algo.new_solution = false;
-        }
+                // Timeout pour reset la temperature quand ca fait longtemps qu'on a pas trouver de meilleur solution.
+                int timeout_temp = 0;
+                int timeout_temp_thresh = 20;
+                // Timeout quand ca fait plein de fois qu'on reset la temperature, on shuffle les employe de place.
+                int timeout_restart = 0;
+                int timeout_restart_thresh = 20;
+                
+                algo.init_solution(true);
+                algo.print_solution(algo.best_sol, verbose_p);
+                while(true){
+                    algo.run_one_loop();
+                    
+                    // si on a trouver une meilleur solution
+                    if(algo.new_solution) {
+                        timeout_temp = 0;
+                        algo.print_solution(algo.best_sol, verbose_p);
+                        algo.new_solution = false;
+                    }
+                    else
+                    {
+                        timeout_temp++;
+                        if(timeout_temp == timeout_temp_thresh)
+                        {
+                            timeout_restart++;
+                            //cout << algo.temperature << endl;
+                            algo.temperature = 20;
+                            timeout_temp = 0;
+                            if(timeout_restart == timeout_restart_thresh) {
+                                cout << "Thread "<< std::this_thread::get_id() << " Restarting" << endl;
+                                // Reinitialize l'algo.
+                                algo.init_solution(false);
+                                algo.print_solution(algo.best_sol, verbose_p);
+                                timeout_restart = 0;
+                            }
+                        }
+                    }
+                }
+            
+            }));
+        
+        
+        std::for_each(threads.begin(), threads.end(), [](std::thread &t) 
+        {
+            t.join();
+        });
+    }
+    }
+    else
+    {
+        cout << "File not found, enter valid filename" << endl;
     }
 
 //    general_stats();
@@ -72,5 +128,48 @@ int main(int argc, char *argv[])
     // Loop!
 
     return 0;
+}
+
+void start_thread(ProblemData data, bool verbose_p )
+{
+    AlgoRecuit algo(data, STEPS_RECUIT);
+
+    // Timeout pour reset la temperature quand ca fait longtemps qu'on a pas trouver de meilleur solution.
+    int timeout_temp = 0;
+    int timeout_temp_thresh = 20;
+    // Timeout quand ca fait plein de fois qu'on reset la temperature, on shuffle les employe de place.
+    int timeout_restart = 0;
+    int timeout_restart_thresh = 20;
+    
+    algo.init_solution(true);
+    algo.print_solution(algo.best_sol, verbose_p);
+    while(true){
+        algo.run_one_loop();
+        
+        // si on a trouver une meilleur solution
+        if(algo.new_solution) {
+            timeout_temp = 0;
+            algo.print_solution(algo.best_sol, verbose_p);
+            algo.new_solution = false;
+        }
+        else
+        {
+            timeout_temp++;
+            if(timeout_temp == timeout_temp_thresh)
+            {
+                timeout_restart++;
+                cout << algo.temperature << endl;
+                algo.temperature = 20;
+                timeout_temp = 0;
+                if(timeout_restart == timeout_restart_thresh) {
+                    cout << "Restarting" << endl;
+                    // Reinitialize l'algo.
+                    algo.init_solution(false);
+                    algo.print_solution(algo.best_sol, verbose_p);
+                    timeout_restart = 0;
+                }
+            }
+        }
+    }
 }
 

@@ -17,6 +17,7 @@ typedef vector<int> employe_task_t;
 
 // map of employe_tasks_t per ecosystem
 // employee id has his list of tasks
+// TODO replace map with vector 
 typedef map<int, employe_task_t> ecosystem_sol_t;
 
 struct Solution {
