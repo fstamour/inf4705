@@ -8,8 +8,6 @@
 #include "stats.h"
 #include "algo_recuit.h"
 
-#define STEPS_RECUIT 100
-
 template<typename T>
 std::string to_string(const T& x) {
     std::ostringstream oss;
@@ -61,12 +59,12 @@ int main(int argc, char *argv[])
         int nb_thread = 4;
         std::vector<std::thread> threads;
         
-        // TODO For each thread
+        // For each thread
         for(int i = 0; i < nb_thread; ++i)
         {
-            threads.push_back(thread( [data,verbose_p]() 
+            threads.push_back(thread( [&] () 
             {
-                AlgoRecuit algo(data, STEPS_RECUIT);
+                AlgoRecuit algo(data, steps);
 
                 // Timeout pour reset la temperature quand ca fait longtemps qu'on a pas trouver de meilleur solution.
                 int timeout_temp = 0;

@@ -1,5 +1,5 @@
 
-CXXFLAGS = --std=c++14 -g -Wall -pedantic -pthread 
+CXXFLAGS = --std=c++14 -Wall -pedantic
 CXX = g++
 
 all: horaire
@@ -11,6 +11,12 @@ algo_recuit.o: algo_recuit.cpp algo_recuit.h
 
 horaire: main.cpp algo_recuit.o solution.o data.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
+
+debug: CXXFLAGS += -g
+debug: horaire
+
+profile: CXXFLAGS += -p
+profile: horaire
 
 stats: horaire
 	./horaire > general_stats.txt
