@@ -9,6 +9,7 @@ stats.o: stats.cpp stats.h
 solution.o: solution.cpp solution.h
 algo_recuit.o: algo_recuit.cpp algo_recuit.h
 
+horaire: CXXFLAGS += -lpthread
 horaire: main.cpp algo_recuit.o solution.o data.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
@@ -18,8 +19,6 @@ debug: horaire
 profile: CXXFLAGS += -p
 profile: horaire
 
-stats: horaire
-	./horaire > general_stats.txt
 
 clean:
 	rm -f *.o
