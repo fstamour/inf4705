@@ -62,7 +62,7 @@ class AlgoRecuit
         void run_one_loop();
         bool is_new_solution();
         void print_solution();
-        void print_solution(Solution * sol);
+        void print_solution(Solution * sol, bool verbose);
         void generate_ecosystem_solution(ecosystem_t eco, Solution * wip, int starting_id, int nb_employes);
 
         // method for algorithm (should be private but privacy selfishness

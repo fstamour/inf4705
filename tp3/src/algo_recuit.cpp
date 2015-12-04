@@ -76,21 +76,24 @@ void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * w
     }
 }
 
-void AlgoRecuit::print_solution(Solution * sol) {
-    int eco_id = 0;
-    int current_total = 0;
-    for(auto eco_sol: sol->ecosystems) {
-        cout << "eco : " << eco_id << " size: " << eco_sol.size() << endl;
-        eco_id++;
-        for(auto sol: eco_sol) {
-            cout << "employe id : " << sol.first << " [ ";
-            for(auto animal: sol.second) {
-                cout << animal << " ";
-                current_total += animal;
+void AlgoRecuit::print_solution(Solution * sol, bool verbose=false) {
+
+    if(verbose){
+        cout << std::sqrt(solution_variance(sol)) << endl;
+        for(auto eco_sol: sol->ecosystems) {
+            cout << eco_sol.size() << endl;
+            for(auto sol: eco_sol) {
+                cout << sol.second.size() << " ";
+                for(auto animal: sol.second) {
+                    cout << animal << " ";
+                }
+                cout << endl;
             }
-            cout << "] = " << current_total << endl;
-            current_total = 0;
         }
+        cout << endl;
+    }
+    else {
+        cout << std::sqrt(solution_variance(sol)) << endl;
     }
 }
 
@@ -115,7 +118,6 @@ void AlgoRecuit::run_one_loop() {
             *current_sol = *wip_sol;
             if(calculate_delta(best_sol, current_sol) > 0){
                 *best_sol = *current_sol;
-                print_solution(best_sol);
                 new_solution = true;
             }
         }
@@ -348,8 +350,8 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
 }
 
 float AlgoRecuit::calculate_delta(Solution * sol1, Solution * sol2) {
-    float s1 = solution_standard_deviation(sol1);
-    float s2 = solution_standard_deviation(sol2);
+    float s1 = solution_variance(sol1);
+    float s2 = solution_variance(sol2);
     //cout << "sol1 - sol2" << endl;
     //cout << s1 << " - " << s2 << " = " << s1 - s2 << endl;
     return s1 - s2;

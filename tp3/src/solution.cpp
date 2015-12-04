@@ -1,6 +1,6 @@
 #include "solution.h"
 
-double solution_standard_deviation(Solution * sol) {
+double solution_variance(Solution * sol) {
 
     int sum = 0;
     int sum_square = 0;

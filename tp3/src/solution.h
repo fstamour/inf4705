@@ -24,6 +24,6 @@ struct Solution {
     vector<ecosystem_sol_t> ecosystems;
 };
 
-double solution_standard_deviation(Solution * sol);
+double solution_variance(Solution * sol);
 
 #endif
