@@ -1,5 +1,5 @@
 
-CXXFLAGS = --std=c++14 -Wall -pedantic
+CXXFLAGS = --std=c++14 -Wall -pedantic -O2
 CXX = g++
 
 all: horaire
@@ -16,8 +16,11 @@ horaire: main.cpp algo_recuit.o solution.o data.o
 debug: CXXFLAGS += -g
 debug: horaire
 
-profile: CXXFLAGS += -p
+profile: CXXFLAGS += -p -fno-omit-frame-pointer
 profile: horaire
+
+profiling.png:
+	gprof horaire | gprof2dot -s | dot -Tpng -o profiling.png
 
 # $(shell pkg-config --libs --cflags opencl-utils)
 opencl: CXXFLAGS += -g -lOpenCL

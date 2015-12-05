@@ -1,15 +1,80 @@
 #include "algo_recuit.h"
 
+// Data structure
 using std::map;
+using std::vector;
+using std::pair;
+using std::set;
 
+// IO
+using std::cout;
+using std::endl;
+using std::string;
+
+// Algo
+using std::accumulate;
+using std::for_each;
+using std::advance;
+using std::max_element;
+using std::min_element;
+using std::distance;
+
+// Random
+using std::default_random_engine;
+using std::uniform_real_distribution;
+using std::uniform_int_distribution;
+using std::random_device;
+using std::mt19937;
+using std::discrete_distribution;
+
+// Math
+using std::exp;
+
+std::mutex AlgoRecuit::employee_distribution_mutex;
+std::set<std::vector<int>> AlgoRecuit::employee_distribution_taboo;
+
+void AlgoRecuit::generate_employee_distribution(std::vector<int>& distribution,
+        size_t nb_ecosystem, size_t nb_employee)
+{
+    bool generate_distribution_p = true;
+    size_t n = 0;
+    while(generate_distribution_p) {
+        // At least one employee per ecosystem.   
+        distribution.assign(nb_ecosystem, 1);
+        
+        for(size_t i = 0; i < nb_employee - nb_ecosystem; ++i) {
+            // Choose random ecosystem
+            size_t eco = rand() % nb_ecosystem;
+            distribution[eco] += 1;
+        }
+
+        // Maybe mutex here?
+        auto end = employee_distribution_taboo.end();
+        auto it = employee_distribution_taboo.find(distribution);
+        if(it == end) {
+           generate_distribution_p = false; 
+           employee_distribution_mutex.lock();
+           employee_distribution_taboo.insert(distribution);
+           employee_distribution_mutex.unlock();
+        }
+        if(n > 1000) {
+            generate_distribution_p = false;
+        }
+    }
+
+    // For debugging
+    if(false) {
+        cout << "Distribution: ";
+        for(auto e : distribution) {
+            cout << " " << e;
+        }
+        cout << "\n";
+    }
+}
 
 AlgoRecuit::AlgoRecuit(ProblemData data_, int steps) {
     data = data_;
     max_steps = steps;
-    init();
-}
-
-void AlgoRecuit::init() {
     wip_sol = new Solution();
     current_sol = new Solution();
     best_sol = new Solution();
@@ -20,27 +85,19 @@ void AlgoRecuit::init() {
     coeficient_refroidissement = 0.995;
 }
 
-AlgoRecuit::~AlgoRecuit() {
-}
-
 void AlgoRecuit::init_solution(bool new_best) {
     
     // Nombre d'employe par ecosysteme.
-    vector<int> nb_employes(data.ecosystem.size(), 1);
-    
-    size_t i = 0;
-    for(; i < data.nb_employee - data.ecosystem.size(); ++i) {
-        // Choose random ecosystem
-        nb_employes[random_int(0, data.ecosystem.size() - 1)] += 1;
-    }
+    vector<int> distribution;
+    generate_employee_distribution(distribution, data.ecosystem.size(), data.nb_employee);
     
     wip_sol->ecosystems.resize(0);
     
-    i = 0;
+    size_t i = 0;
     for(auto ecosystem: data.ecosystem){
         auto e = ecosystem_sol_t();
         wip_sol->ecosystems.push_back(e);
-        generate_ecosystem_solution(ecosystem, wip_sol, data.nb_employee, nb_employes[i]);
+        generate_ecosystem_solution(ecosystem, wip_sol, data.nb_employee, distribution[i]);
         ++i;
     }
     
@@ -100,81 +157,6 @@ void AlgoRecuit::run_one_loop() {
         }
         temperature = temperature * coeficient_refroidissement;
     }
-}
-
-void AlgoRecuit::generate_neighboor_solution_transfer() {
-
-    // select random ecosystem with a least 2 employe
-    int max = data.ecosystem.size() - 1;
-    if(max == 0){
-        cout << "\x1b[37mERROR DATA.ECOSYSTEM.SIZE IS 0\x1b[0m" << endl;
-        cout << "\x1b[35m" << max << endl;
-    }
-    int index;
-    ecosystem_sol_t * eco;
-    do {
-        index = random_int(0, max);
-        eco = &wip_sol->ecosystems[index];
-    } while(eco->size() < 2);
-
-    // select employe with max and min charge
-    //map<int, vector<int>>::iterator e_max = eco->begin();
-    //vector<int> * e_min, * e_max;
-    int min_key, max_key;
-
-    int current_sum, sum_min, sum_max;
-    current_sum = accumulate(eco->begin()->second.begin(), eco->begin()->second.end(), 0);
-    sum_min = sum_max = current_sum;
-    // initialise key in map
-    min_key = max_key = eco->begin()->first;
-    for(auto e: *eco){
-        current_sum = accumulate(e.second.begin(), e.second.end(), 0);
-        if(current_sum < sum_min) {
-            sum_min = current_sum;
-            min_key = e.first;
-        }
-        if(current_sum > sum_max) {
-            sum_max = current_sum;
-            max_key = e.first;
-        }
-    }
-    if(min_key == max_key){
-        // TODO fix this
-        cout << "min == max" << endl;
-        return;
-    }
-
-    // swap biggest charge from max with smallest charge from min
-
-    // if one element in array just transfer to other employe
-    // this shoudln't happend
-    if((*eco)[max_key].size() == 0) {
-        return;
-    }
-    if((*eco)[min_key].size() == 1 || (*eco)[min_key].size() == 0) {
-        // just transfer from max to min, no swap
-
-        auto iter_max = max_element((*eco)[max_key].begin(), (*eco)[max_key].end());
-        int index_max = distance((*eco)[max_key].begin(), iter_max);
-        auto max_animal = (*eco)[max_key][index_max];
-        (*eco)[max_key].erase((*eco)[max_key].begin() + index_max);
-        (*eco)[min_key].push_back(max_animal);
-        return;
-    }
-
-    auto iter_max = max_element((*eco)[max_key].begin(), (*eco)[max_key].end());
-    auto iter_min = min_element((*eco)[min_key].begin(), (*eco)[min_key].end());
-
-    int index_max = distance((*eco)[max_key].begin(), iter_max);
-    int index_min = distance((*eco)[min_key].begin(), iter_min);
-    auto max_animal = (*eco)[max_key][index_max];
-    auto min_animal = (*eco)[min_key][index_min];
-
-    (*eco)[max_key].erase((*eco)[max_key].begin() + index_max);
-    (*eco)[min_key].erase((*eco)[min_key].begin() + index_min);
-
-    (*eco)[max_key].push_back(min_animal);
-    (*eco)[min_key].push_back(max_animal);
 }
 
 void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {

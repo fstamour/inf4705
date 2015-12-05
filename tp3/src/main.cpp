@@ -5,6 +5,8 @@
 #include <thread>
 #include <mutex>
 
+#include <ctime>
+
 #include "data.h"
 #include "stats.h"
 #include "algo_recuit.h"
@@ -27,6 +29,7 @@ void print_usage() {
     cout << "Usage: horaire -f FILENAME [OPTIONS]\n"
             "  -p\tMode verbeux, afficher les solutions complete.\n"
             "  -s steps\tNombre de boucle que le recuit simule roule avant d'afficher une nouvelle solutions.\n"
+            "  -l\tNombre de boucle de la boucle principal, 0 pour infini (default).\n"
             "  -h\tAffiche cette aide.\n"
             << std::flush;
 }
@@ -34,16 +37,20 @@ void print_usage() {
 
 int main(int argc, char *argv[])
 {
+    srand(time(0));
+
+
     // "Globals"
     string filename;
     bool verbose_p = false;
     bool help_p = false;
     // Le nombre d'etape pour le recuit
     int steps = 100;
+    size_t loop = 0;
     
     // Parse command-line options
     int opt;
-    while((opt = getopt(argc, argv, "hpf:s:")) != -1) {
+    while((opt = getopt(argc, argv, "hpf:s:l:")) != -1) {
         switch(opt) {
             case 'p':
                 verbose_p = true;
@@ -56,6 +63,9 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
                 help_p = true;
+                break;
+            case 'l':
+                loop = std::stoi(optarg);
                 break;
             case '?':
                 exit(1);
@@ -77,8 +87,20 @@ int main(int argc, char *argv[])
     ProblemData data = make_problem_data(filename);
     
     Solution current_best;
-    int current_best_std_dev = std::numeric_limits<int>::max();
-
+    double current_best_std_dev = std::numeric_limits<double>::max();
+    std::mutex current_best_mutex;
+    auto handle_best = [&] (Solution* sol) {
+        if(sol->get_std_dev() < current_best_std_dev) {
+            current_best_mutex.lock();
+            if(sol->get_std_dev() < current_best_std_dev) {
+                current_best = *sol;
+                current_best_std_dev = sol->get_std_dev();
+                current_best.std_deviation = current_best_std_dev;
+                current_best.print(verbose_p);
+            }
+            current_best_mutex.unlock();
+        }
+    };
 
     int nb_thread = 4;
     std::vector<std::thread> threads;
@@ -97,21 +119,22 @@ int main(int argc, char *argv[])
             int timeout_restart_thresh = 20;
             
             algo.init_solution(true);
-            algo.best_sol->print(verbose_p);
-            for(size_t j = 0; j < 100; ++j) {
+            handle_best(algo.best_sol);
+            size_t loop_count = 0;
+            while(loop == 0 || loop_count < loop) {
                 algo.run_one_loop();
                 
                 // si on a trouver une meilleur solution
                 if(algo.new_solution) {
                     timeout_temp = 0;
-                    algo.best_sol->print(verbose_p);
+                    handle_best(algo.best_sol);
                     algo.new_solution = false;
                 } else {
                     timeout_temp++;
                     if(timeout_temp == timeout_temp_thresh) {
                         timeout_restart++;
                         //cout << algo.temperature << endl;
-                        algo.temperature = 20;
+                        algo.temperature = 100;
                         timeout_temp = 0;
                         if(timeout_restart == timeout_restart_thresh) {
                             //cout << "Thread "<< std::hex << std::this_thread::get_id() << " Restarting" << endl;
@@ -121,6 +144,7 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+                ++loop_count;
             }
         
         }));
