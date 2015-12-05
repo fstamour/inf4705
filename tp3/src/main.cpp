@@ -3,6 +3,7 @@
 #include <string>
 #include <unistd.h> // For option parsing.
 #include <thread>
+#include <mutex>
 
 #include "data.h"
 #include "stats.h"
@@ -74,14 +75,18 @@ int main(int argc, char *argv[])
     }
 
     ProblemData data = make_problem_data(filename);
+    
+    Solution current_best;
+    int current_best_std_dev = std::numeric_limits<int>::max();
+
+
     int nb_thread = 4;
     std::vector<std::thread> threads;
     
     // For each thread
-    for(int i = 0; i < nb_thread; ++i)
-    {
-        threads.push_back(thread( [&] () 
-        {
+    for(int i = 0; i < nb_thread; ++i) {
+        // Create thread
+        threads.push_back(thread( [&] () {
             AlgoRecuit algo(data, steps);
 
             // Timeout pour reset la temperature quand ca fait longtemps qu'on a pas trouver de meilleur solution.
@@ -92,27 +97,24 @@ int main(int argc, char *argv[])
             int timeout_restart_thresh = 20;
             
             algo.init_solution(true);
-            algo.print_solution(algo.best_sol, verbose_p);
-            while(true){
+            algo.best_sol->print(verbose_p);
+            for(size_t j = 0; j < 100; ++j) {
                 algo.run_one_loop();
                 
                 // si on a trouver une meilleur solution
                 if(algo.new_solution) {
                     timeout_temp = 0;
-                    algo.print_solution(algo.best_sol, verbose_p);
+                    algo.best_sol->print(verbose_p);
                     algo.new_solution = false;
-                }
-                else
-                {
+                } else {
                     timeout_temp++;
-                    if(timeout_temp == timeout_temp_thresh)
-                    {
+                    if(timeout_temp == timeout_temp_thresh) {
                         timeout_restart++;
                         //cout << algo.temperature << endl;
                         algo.temperature = 20;
                         timeout_temp = 0;
                         if(timeout_restart == timeout_restart_thresh) {
-                            cout << "Thread "<< std::this_thread::get_id() << " Restarting" << endl;
+                            //cout << "Thread "<< std::hex << std::this_thread::get_id() << " Restarting" << endl;
                             // Reinitialize l'algo.
                             algo.init_solution(false);
                             timeout_restart = 0;

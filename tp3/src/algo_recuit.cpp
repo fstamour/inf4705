@@ -1,7 +1,7 @@
-// #include <chrono>
-// #include <thread>
-
 #include "algo_recuit.h"
+
+using std::map;
+
 
 AlgoRecuit::AlgoRecuit(ProblemData data_, int steps) {
     data = data_;
@@ -55,7 +55,8 @@ void AlgoRecuit::init_solution(Solution *sol) {
     *current_sol = *sol;
 }
 
-void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * wip, int starting_id, int nb_employes) {
+void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * wip,
+        int starting_id, int nb_employes) {
     int employe_id = starting_id - 1;
     
     // initialise la map de tache par employe
@@ -70,27 +71,6 @@ void AlgoRecuit::generate_ecosystem_solution(ecosystem_t ecosystem, Solution * w
         if(employe_id < starting_id - nb_employes || employe_id < 0) {
             employe_id = starting_id - 1;
         }
-    }
-}
-
-void AlgoRecuit::print_solution(Solution * sol, bool verbose=false) {
-
-    if(verbose){
-        cout << std::sqrt(solution_variance(sol)) << endl;
-        for(auto eco_sol: sol->ecosystems) {
-            cout << eco_sol.size() << endl;
-            for(auto sol: eco_sol) {
-                cout << sol.second.size() << " ";
-                for(auto animal: sol.second) {
-                    cout << animal << " ";
-                }
-                cout << endl;
-            }
-        }
-        cout << endl;
-    }
-    else {
-        cout << std::sqrt(solution_variance(sol)) << endl;
     }
 }
 
@@ -120,108 +100,6 @@ void AlgoRecuit::run_one_loop() {
         }
         temperature = temperature * coeficient_refroidissement;
     }
-}
-
-void AlgoRecuit::generate_neighboor_solution() {
-    // move random animal to random employe in same ecosystem
-
-    // select random ecosystem
-    int max = data.ecosystem.size() - 1;
-    if(max == 0){
-        cout << "\x1b[37mERROR DATA.ECOSYSTEM.SIZE IS 0\x1b[0m" << endl;
-        cout << "\x1b[35m" << max << endl;
-    }
-    int index = random_int(0, max);
-    auto * eco = &wip_sol->ecosystems[index];
-
-    // random employe in ecosystem_solution
-    max = eco->size() - 1;
-    if(max == 0 || max == -1){
-        cout << "\x1b[37mERROR ECO->SIZE IS 0\x1b[0m" << endl;
-        cout << "\x1b[35m" << max << endl;
-    }
-
-    map<int, vector<int>>::iterator employe;
-    do {
-        employe = eco->begin();
-        advance(employe, random_int(0, max));
-    } while ( employe->second.size() == 0 );
-    auto * employe_vector = &employe->second;
-
-    // random selection of animal in vector
-    max = employe_vector->size() - 1;
-    //if(max == 0 || max == -1){
-        //cout << "\x1b[37mERROR EMPLOYE_VECTOR->SIZE IS 0\x1b[0m" << endl;
-        //cout << "\x1b[35m" << max << endl;
-    //}
-    index = random_int(0, max);
-    auto animal = (*employe_vector)[index];
-    employe_vector->erase(employe_vector->begin() + index);
-
-    // random selection of employe to receive animal in same ecosystem
-    auto employe2 = eco->begin();
-    max = eco->size() - 1;
-    if(max == -1){
-        max = 0;
-    }
-    advance(employe2, random_int(0, max));
-    auto *employe2_vector = &employe2->second;
-    employe2_vector->push_back(animal);
-
-}
-
-void AlgoRecuit::generate_neighboor_solution_swap() {
-
-    // select random ecosystem with a least 2 employe
-    int max = data.ecosystem.size() - 1;
-    if(max == 0){
-        cout << "\x1b[37mERROR DATA.ECOSYSTEM.SIZE IS 0\x1b[0m" << endl;
-        cout << "\x1b[35m" << max << endl;
-    }
-    int index;
-    ecosystem_sol_t * eco;
-    do {
-        index = random_int(0, max);
-        eco = &wip_sol->ecosystems[index];
-    } while(eco->size() < 2);
-
-    // random employe in ecosystem_solution
-    max = eco->size() - 1;
-    if(max == 0 || max == -1){
-        cout << "\x1b[37mERROR ECO->SIZE IS 0\x1b[0m" << endl;
-        cout << "\x1b[35m" << max << endl;
-    }
-    map<int, vector<int>>::iterator employe1;
-    do {
-        employe1 = eco->begin();
-        advance(employe1, random_int(0, max));
-    } while ( employe1->second.size() == 0 );
-    auto * employe1_vector = &employe1->second;
-
-    // random employe different than previous one in same ecosystem
-    map<int, vector<int>>::iterator employe2;
-    do {
-        employe2 = eco->begin();
-        advance(employe2, random_int(0, max));
-    } while ( employe2->second.size() == 0 || employe2 == employe1 );
-    auto * employe2_vector = &employe2->second;
-
-    // random selection of one animal for each employe
-    int index1 = random_int(0, employe1_vector->size() - 1);
-    int index2 = random_int(0, employe2_vector->size() - 1);
-    auto animal_employe1 = (*employe1_vector)[index1];
-    auto animal_employe2 = (*employe2_vector)[index2];
-
-    // swap animals from employe
-
-    // erase animal from vectors
-    employe1_vector->erase( employe1_vector->begin() + index1);
-    employe2_vector->erase( employe2_vector->begin() + index2);
-
-    // insert animal in vectors
-    employe1_vector->push_back(animal_employe2);
-    employe2_vector->push_back(animal_employe1);
-
 }
 
 void AlgoRecuit::generate_neighboor_solution_transfer() {
@@ -271,9 +149,6 @@ void AlgoRecuit::generate_neighboor_solution_transfer() {
     // if one element in array just transfer to other employe
     // this shoudln't happend
     if((*eco)[max_key].size() == 0) {
-        //cout << "NEEED DEBUGGING" << endl;
-        //cout << max_key << endl;
-        //print_solution(wip_sol);
         return;
     }
     if((*eco)[min_key].size() == 1 || (*eco)[min_key].size() == 0) {
@@ -348,10 +223,8 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
 }
 
 float AlgoRecuit::calculate_delta(Solution * sol1, Solution * sol2) {
-    float s1 = solution_variance(sol1);
-    float s2 = solution_variance(sol2);
-    //cout << "sol1 - sol2" << endl;
-    //cout << s1 << " - " << s2 << " = " << s1 - s2 << endl;
+    float s1 = sol1->get_std_dev();
+    float s2 = sol2->get_std_dev();
     return s1 - s2;
 }
 
