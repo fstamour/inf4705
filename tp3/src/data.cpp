@@ -11,6 +11,10 @@ ProblemData make_problem_data(const string& filename) {
 
     // Ouvre le fichier
     std::ifstream in(filename);
+    if(!in) {
+        std::cerr << "An error occured while opening the file" << std::endl;
+        exit(1);
+    }
 
     // Lit le nombre d'écosystemes.
     int nb_ecosystem = -1;

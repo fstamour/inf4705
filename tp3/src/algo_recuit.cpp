@@ -1,6 +1,7 @@
+// #include <chrono>
+// #include <thread>
+
 #include "algo_recuit.h"
-#include <chrono>
-#include <thread>
 
 AlgoRecuit::AlgoRecuit(ProblemData data_, int steps) {
     data = data_;
