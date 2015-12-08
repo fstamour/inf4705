@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     // "Globals"
     string filename;
     bool verbose_p = false;
+    bool debug_p = false;
     bool help_p = false;
     // Le nombre d'etape pour le recuit
     int steps = 100;
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
     
     // Parse command-line options
     int opt;
-    while((opt = getopt(argc, argv, "hpf:s:l:")) != -1) {
+    while((opt = getopt(argc, argv, "hdpf:s:l:")) != -1) {
         switch(opt) {
             case 'p':
                 verbose_p = true;
@@ -66,6 +67,9 @@ int main(int argc, char *argv[])
                 break;
             case 'l':
                 loop = std::stoi(optarg);
+                break;
+            case 'd':
+                debug_p = true;
                 break;
             case '?':
                 exit(1);
@@ -87,17 +91,21 @@ int main(int argc, char *argv[])
     ProblemData data = make_problem_data(filename);
     
     Solution current_best;
-    double current_best_std_dev = std::numeric_limits<double>::max();
+    double current_best_variance = std::numeric_limits<double>::max();
     std::mutex current_best_mutex;
     auto handle_best = [&] (Solution* sol) {
-        if(sol->get_std_dev() < current_best_std_dev) {
+        double variance = sol->compute_variance();
+        if(variance < current_best_variance) {
             current_best_mutex.lock();
-            if(sol->get_std_dev() < current_best_std_dev) {
+            if(variance < current_best_variance) {
                 current_best = *sol;
-                current_best_std_dev = sol->get_std_dev();
-                current_best.std_deviation = current_best_std_dev;
-                current_best.print(verbose_p);
+                current_best_variance = variance;
+                cout << sqrt(variance) << "\n";
+                if(verbose_p) {
+                    current_best.print_details();
+                }
             }
+            cout << std::flush;
             current_best_mutex.unlock();
         }
     };
@@ -109,6 +117,8 @@ int main(int argc, char *argv[])
     for(int i = 0; i < nb_thread; ++i) {
         // Create thread
         threads.push_back(thread( [&] () {
+
+            auto thread_id = std::this_thread::get_id();
             AlgoRecuit algo(data, steps);
 
             // Timeout pour reset la temperature quand ca fait longtemps qu'on a pas trouver de meilleur solution.
@@ -130,17 +140,30 @@ int main(int argc, char *argv[])
                     handle_best(algo.best_sol);
                     algo.new_solution = false;
                 } else {
-                    timeout_temp++;
+                    if(algo.temperature < 0.5) {
+                        timeout_temp++;
+                    }
                     if(timeout_temp == timeout_temp_thresh) {
+                        if(debug_p) {
+                            current_best_mutex.lock();
+                            cout << std::hex << thread_id << std::dec << " reseting temperature.\n";
+                            current_best_mutex.unlock();
+                        }
                         timeout_restart++;
                         //cout << algo.temperature << endl;
-                        algo.temperature = 100;
+                        algo.temperature = 20;
                         timeout_temp = 0;
                         if(timeout_restart == timeout_restart_thresh) {
-                            //cout << "Thread "<< std::hex << std::this_thread::get_id() << " Restarting" << endl;
-                            // Reinitialize l'algo.
+                            if(debug_p) {
+                                current_best_mutex.lock();
+                                cout << std::hex << thread_id << std::dec << " reseting employee distribution.\n";
+                            }
                             algo.init_solution(false);
                             timeout_restart = 0;
+                            if(debug_p) {
+                                cout << std::hex << thread_id << std::dec << " DONE reseting employee distribution.\n";
+                            }
+                            current_best_mutex.unlock();
                         }
                     }
                 }

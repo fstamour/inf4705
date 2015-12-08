@@ -57,7 +57,7 @@ struct AlgoRecuit
     bool metropolis_criteria(float delta, float temperature);
 
     int random_int(int min, int max);
-    int random_employe_per_weight(ecosystem_sol_t * eco);
+    int random_employe_per_weight(ecosystem_sol_t * eco, bool min_or_not_max);
     int random_animal_per_weight(std::vector<int> * tasks);
 
 };

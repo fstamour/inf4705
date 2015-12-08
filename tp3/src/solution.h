@@ -17,20 +17,13 @@ typedef std::vector<int> employe_task_t;
 typedef std::map<int, employe_task_t> ecosystem_sol_t;
 
 struct Solution {
-    
-    Solution(){}
-
-    // Copy ctor
-    Solution(const Solution& sol);
 
     // list of ecosystems
     std::vector<ecosystem_sol_t> ecosystems;
 
-    double std_deviation = -1;
+    double compute_variance();
 
-    double get_std_dev();
-
-    void print(bool verbose_p, std::ostream& out = std::cout);
+    void print_details(std::ostream& out = std::cout);
 };
 
 #endif

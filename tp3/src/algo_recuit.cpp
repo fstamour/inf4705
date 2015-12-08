@@ -57,9 +57,10 @@ void AlgoRecuit::generate_employee_distribution(std::vector<int>& distribution,
            employee_distribution_taboo.insert(distribution);
            employee_distribution_mutex.unlock();
         }
-        if(n > 1000) {
+        if(n > 100) {
             generate_distribution_p = false;
         }
+        n++;
     }
 
     // For debugging
@@ -163,25 +164,27 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
 
     // select random ecosystem_sol_t
     // select random ecosystem with a least 2 employe
-    int max = data.ecosystem.size() - 1;
-    if(max == 0){
+    int max = data.ecosystem.size();
+    if(max == 0) {
         cout << "\x1b[37mERROR DATA.ECOSYSTEM.SIZE IS 0\x1b[0m" << endl;
         cout << "\x1b[35m" << max << endl;
     }
+
     int index;
     ecosystem_sol_t * eco;
+    // Select randomly an ecosystem with more than 2 employee
     do {
-        index = random_int(0, max);
+        index = random_int(0, max-1);
         eco = &wip_sol->ecosystems[index];
-    } while(eco->size() < 2);
+    } while(eco->size() < 2); // This could loop forever if each ecosystem have only 1 employee.
 
 
     // random select two employe
     int key_employe1, key_employe2;
     do {
         // TODO bool upDown pour biaise le random vers une tandance souhaitee
-        key_employe1 = random_employe_per_weight(eco);
-        key_employe2 = random_employe_per_weight(eco);
+        key_employe1 = random_employe_per_weight(eco, false);
+        key_employe2 = random_employe_per_weight(eco, true);
     }
     while (key_employe1 == key_employe2);
 
@@ -205,8 +208,8 @@ void AlgoRecuit::generate_neighboor_solution_proportional_probabilty() {
 }
 
 float AlgoRecuit::calculate_delta(Solution * sol1, Solution * sol2) {
-    float s1 = sol1->get_std_dev();
-    float s2 = sol2->get_std_dev();
+    float s1 = sol1->compute_variance();
+    float s2 = sol2->compute_variance();
     return s1 - s2;
 }
 
@@ -237,7 +240,7 @@ int AlgoRecuit::random_int(int min, int max) {
     return uniform_int_distribution<int>{min, max}(int_gen);
 }
 
-int AlgoRecuit::random_employe_per_weight(ecosystem_sol_t * eco){
+int AlgoRecuit::random_employe_per_weight(ecosystem_sol_t * eco, bool min_or_not_max) {
     // vector of <employe_id, sum of hours>
     vector<pair<int,int>> sums;
     int total_sum = 0;
@@ -249,8 +252,14 @@ int AlgoRecuit::random_employe_per_weight(ecosystem_sol_t * eco){
     }
 
     vector<float> weights;
-    for(auto sum: sums){
-        weights.push_back((float)sum.second / (float)total_sum);
+    if(min_or_not_max) {
+        for(auto sum: sums){
+            weights.push_back( (float)(total_sum - sum.second) / (float)total_sum);
+        }
+    } else {
+        for(auto sum: sums){
+            weights.push_back((float)sum.second / (float)total_sum);
+        }
     }
 
     discrete_distribution<> dist(weights.begin(), weights.end());

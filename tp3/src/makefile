@@ -1,5 +1,6 @@
 
-CXXFLAGS = --std=c++14 -Wall -pedantic -O2
+# Weird fact: adding -O2 or -O3 (speed optimization) makes it crash _and_ be slower to converge.
+CXXFLAGS = --std=c++14 -Wall -pedantic 
 CXX = g++
 
 all: horaire
